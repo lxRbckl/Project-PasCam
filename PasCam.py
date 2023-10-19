@@ -1,632 +1,577 @@
-# PasCam 1 by Alex Arbuckle #
+# PasCam 2 by Alex Arbuckle #
 
-# PasCam Imports #
-import string, random, datetime
+import random, string, glob, datetime, time
 
-# PasCam Functions #
-def PasCam_Camouflage(input_length):
-    ''' generates random string '''
-    global PasCam_Generated_String
+# PasCam : Input #
 
-    PasCam_Generated_String = (''.join([random.choice(string.ascii_letters + string.digits) for _Camouflage_Token in range(input_length)]))
-    return PasCam_Generated_String
+def PasCam_Directory():
+    '''  '''
+
+    global PasCam_Directory
+
+    PasCam_Directory = []
+    for PasCam_File in glob.glob('*.txt'):
+
+        PasCam_Directory.append(PasCam_File)
+
+
+def PasCam_File(Input_Parameter):
+    '''  '''
+
+    if Input_Parameter == 1:
+
+        while True:
+
+            File_Input = PasCam_Input_A('website')
+            File_Input += '.txt'
+
+            if File_Input in PasCam_Directory:
+
+                print('File already exists.\n')
+
+            elif File_Input not in PasCam_Directory:
+
+                return File_Input
+
+    elif Input_Parameter == 2:
+
+        while True:
+
+            File_Input = PasCam_Input_A('website')
+            File_Input += '.txt'
+
+            if File_Input in PasCam_Directory:
+
+                return File_Input
+
+            elif File_Input not in PasCam_Directory:
+
+                print('File does not exist.\n')
 
 def PasCam_Menu():
-    ''' returns option '''
-    global Menu_Option
-
-    available = ['1', '2', '3', '1.', '2.', '3.']
+    '''  '''
 
     while True:
-        print('1. Encode Information')
-        print('2. Decode Information')
-        print('3. Revise Information')
+
+        print('(1)\tEncrypt Information')
+        print('(2)\tDecrypt Information')
+        print('(3)\tUpdate Information')
+        print('(4)\tPasCam Help Menu\n')
+
+        Menu_List = ['1', '2', '3', '4']
+        Menu_Input = input('Select a choice: ')
         print()
 
-        Menu_Option = input('Enter the desired task: ')
-        print()
+        if Menu_Input in Menu_List:
 
-        if Menu_Option in available:
-
-            return Menu_Option
+            return Menu_Input
 
         else:
-            print('Please enter one of the given options.')
-            print()
 
-def PasCam_Encode():
-    ''' returns option '''
-    global Encode_Option
+            print('Input is invalid.\n')
 
-    available = ['1', '2', '1.', '2.']
-
-    while True:
-        print('1. Username/Password')
-        print('2. Email/Username/Password')
-        print()
-
-        Encode_Option = input('Enter the desired task: ')
-        print()
-
-        if Encode_Option in available:
-
-            return Encode_Option
-
-        else:
-            print('Please enter one of the given options.')
-            print()
-
-def PasCam_Decode():
-    ''' returns option '''
-    global input_find, input_count
+def PasCam_Input_A(Input_Parameter):
+    '''  '''
 
     while True:
 
-        input_find = input('Enter the name of the website: ')
+        Input_Left = input('Enter {}: '.format(Input_Parameter))
         print()
 
-        try:
-            with open(input_find, 'r') as input_open:
-                input_count = 0
+        Input_String = ''
+        for Input_Token in Input_Left:
 
-                for line in input_open:
-                    for token in line:
-                        input_count += 1
+            if Input_Token == ' ':
 
-            return input_find, input_count
+                Input_String += Input_Token
 
-        except:
-            print('PasCam was unable to find the file. Please try again.')
-            print()
+        if Input_String == '':
 
-def PasCam_Input1(PasCam_Input):
-    ''' Encrypt 1 of 2 '''
-    global _input, input_length, input_file1
+            if Input_Left == '':
 
-    while True:
-        input_ = input('Enter the %s: ' % (PasCam_Input))
-        _input = input('Enter the %s again: ' % (PasCam_Input))
-        print()
-
-        if input_ == _input:
-            input_length = len(_input)
-
-            input_file1 = PasCam_Camouflage(5)
-            with open(input_file1, 'w') as input_open:
-                count = 0
-                n = 24
-                i = 154
-
-                while count < input_length:
-                    number = (random.randint(n, i))
-                    input_open.write('%s\n' % (number))
-                    n = i + 1
-                    i = i + 120
-                    count += 1
-
-            return _input, input_length, input_file1
-
-        else:
-            print('The %ss do not match. Please try again.' % (PasCam_Input))
-            print()
-
-def PasCam_Input2(_input, input_length, input_file1):
-    ''' Encrypt 2 of 2 '''
-    global input_file2
-
-    input_available = []
-    with open(input_file1, 'r') as input_open1:
-
-        for input_number in input_open1:
-            input_available.append(int(input_number.strip()))
-
-    input_file2 = PasCam_Camouflage(5)
-    with open(input_file2, 'w') as input_open2:
-        input_camouflage = PasCam_Camouflage(5555)
-        count = 0
-
-        while input_length > 0:
-
-            for input_token in input_camouflage:
-
-                if count in input_available:
-                    input_length -= 1
-                    input_open2.write(_input[input_length])
-                    count += 1
-
-                elif count not in input_available:
-                    input_open2.write(input_token)
-                    count += 1
-
-        input_open2.write(PasCam_Camouflage(5555))
-
-    return input_file2
-
-def PasCam_Encode1():
-    ''' encodes username/password '''
-
-    while True:
-
-        website_ = input('Enter the website: ')
-        _website = input('Enter the website again: ')
-        print()
-
-        if website_ == _website:
-
-            with open(website_, 'w') as input_open:
-
-                website_camouflage_beginning = PasCam_Camouflage(5555)
-                input_open.write(website_camouflage_beginning)
-
-                PasCam_Input1('username')
-                input_open.write(input_file1)
-                PasCam_Input2(_input, input_length, input_file1)
-                input_open.write(input_file2)
-
-                PasCam_Input1('password')
-                input_open.write(input_file1)
-                PasCam_Input2(_input, input_length, input_file1)
-                input_open.write(input_file2)
-
-                website_camouflage_end = PasCam_Camouflage(5555)
-                input_open.write(website_camouflage_end)
-
-                Encrypted_Success()
-
-            return
-
-        else:
-            print('The websites do not match. Please try again.')
-            print()
-
-def PasCam_Encode2():
-    ''' encodes email/username/password '''
-
-    while True:
-
-        website_ = input('Enter the website: ')
-        _website = input('Enter the website again: ')
-        print()
-
-        if website_ == _website:
-
-            with open(website_, 'w') as input_open:
-
-                website_camouflage_beginning = PasCam_Camouflage(5555)
-                input_open.write(website_camouflage_beginning)
-
-                PasCam_Input1('email')
-                input_open.write(input_file1)
-                PasCam_Input2(_input, input_length, input_file1)
-                input_open.write(input_file2)
-
-                PasCam_Input1('username')
-                input_open.write(input_file1)
-                PasCam_Input2(_input, input_length, input_file1)
-                input_open.write(input_file2)
-
-                PasCam_Input1('password')
-                input_open.write(input_file1)
-                PasCam_Input2(_input, input_length, input_file1)
-                input_open.write(input_file2)
-
-                website_camouflage_end = PasCam_Camouflage(5555)
-                input_open.write(website_camouflage_end)
-
-                Encrypted_Success()
-
-            return
-
-        else:
-            print('The websites do not match. Please try again.')
-            print()
-
-def PasCam_Decode1():
-    ''' decodes username/password '''
-
-    Username_DeCamo = [5556, 5557, 5558, 5559, 5560]
-    Username_DeCamo_File = ''
-    Username_Camo = [5561, 5562, 5563, 5564, 5565]
-    Username_Camo_File = ''
-    Password_DeCamo = [5566, 5567, 5568, 5569, 5570]
-    Password_DeCamo_File = ''
-    Password_Camo = [5571, 5572, 5573, 5574, 5575]
-    Password_Camo_File = ''
-
-    count_ = 1
-    with open(input_find, 'r') as input_open:
-
-        for line in input_open:
-            for token in line:
-
-                if count_ in Username_DeCamo:
-                    Username_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in Username_Camo:
-                    Username_Camo_File += token
-                    count_ += 1
-
-                elif count_ in Password_DeCamo:
-                    Password_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in Password_Camo:
-                    Password_Camo_File += token
-                    count_ += 1
-
-                else:
-                    count_ += 1
-
-    Username_Numbers_List = []
-    with open(Username_DeCamo_File, 'r') as Username_Numbers_File:
-
-        for token_ in Username_Numbers_File:
-            Username_Numbers_List.append(int(token_))
-
-    Username_Camouflage_Count = 0
-    Username_Return = ''
-    with open(Username_Camo_File, 'r') as Username_Camouflage_File:
-
-        for _line in Username_Camouflage_File:
-            for _token in _line:
-
-                if Username_Camouflage_Count in Username_Numbers_List:
-                    Username_Return += _token
-                    Username_Camouflage_Count += 1
-
-                else:
-                    Username_Camouflage_Count += 1
-
-    Password_Numbers_List = []
-    with open(Password_DeCamo_File, 'r') as Password_Numbers_File:
-
-        for token_ in Password_Numbers_File:
-            Password_Numbers_List.append(int(token_))
-
-    Password_Camouflage_Count = 0
-    Password_Return = ''
-    with open(Password_Camo_File, 'r') as Password_Camouflage_File:
-
-        for _line in Password_Camouflage_File:
-            for _token in _line:
-
-                if Password_Camouflage_Count in Password_Numbers_List:
-                    Password_Return += _token
-                    Password_Camouflage_Count += 1
-
-                else:
-                    Password_Camouflage_Count += 1
-
-    Decrypted_Success()
-
-    print('Username: %s' % (Username_Return[::-1]))
-    print('Password: %s' % (Password_Return[::-1]))
-    print()
-
-def PasCam_Decode2():
-    ''' decodes email/username/password '''
-
-    Email_DeCamo = [5556, 5557, 5558, 5559, 5560]
-    Email_DeCamo_File = ''
-    Email_Camo = [5561, 5562, 5563, 5564, 5565]
-    Email_Camo_File = ''
-    Username_DeCamo = [5566, 5567, 5568, 5569, 5570]
-    Username_DeCamo_File = ''
-    Username_Camo = [5571, 5572, 5573, 5574, 5575]
-    Username_Camo_File = ''
-    Password_DeCamo = [5576, 5577, 5578, 5579, 5580]
-    Password_DeCamo_File = ''
-    Password_Camo = [5581, 5582, 5583, 5584, 5585]
-    Password_Camo_File = ''
-
-    count_ = 1
-    with open(input_find, 'r') as input_open:
-
-        for line in input_open:
-            for token in line:
-
-                if count_ in Email_DeCamo:
-                    Email_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in Email_Camo:
-                    Email_Camo_File += token
-                    count_ += 1
-
-                elif count_ in Username_DeCamo:
-                    Username_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in Username_Camo:
-                    Username_Camo_File += token
-                    count_ += 1
-
-                elif count_ in Password_DeCamo:
-                    Password_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in Password_Camo:
-                    Password_Camo_File += token
-                    count_ += 1
-
-                else:
-                    count_ += 1
-
-    Email_Numbers_List = []
-    with open(Email_DeCamo_File,'r') as Email_Numbers_File:
-
-        for token_ in Email_Numbers_File:
-            Email_Numbers_List.append(int(token_))
-
-    Email_Camouflage_Count = 0
-    Email_Return = ''
-    with open(Email_Camo_File, 'r') as Email_Camouflage_File:
-
-        for _line in Email_Camouflage_File:
-            for _token in _line:
-
-                if Email_Camouflage_Count in Email_Numbers_List:
-                    Email_Return += _token
-                    Email_Camouflage_Count += 1
-
-                else:
-                    Email_Camouflage_Count += 1
-
-    Username_Numbers_List = []
-    with open(Username_DeCamo_File, 'r') as Username_Numbers_File:
-
-        for token_ in Username_Numbers_File:
-            Username_Numbers_List.append(int(token_))
-
-    Username_Camouflage_Count = 0
-    Username_Return = ''
-    with open(Username_Camo_File, 'r') as Username_Camouflage_File:
-
-        for _line in Username_Camouflage_File:
-            for _token in _line:
-
-                if Username_Camouflage_Count in Username_Numbers_List:
-                    Username_Return += _token
-                    Username_Camouflage_Count += 1
-
-                else:
-                    Username_Camouflage_Count += 1
-
-    Password_Numbers_List = []
-    with open(Password_DeCamo_File, 'r') as Password_Numbers_File:
-
-        for token_ in Password_Numbers_File:
-            Password_Numbers_List.append(int(token_))
-
-    Password_Camouflage_Count = 0
-    Password_Return = ''
-
-    with open(Password_Camo_File, 'r') as Password_Camouflage_File:
-
-        for _line in Password_Camouflage_File:
-            for _token in _line:
-
-                if Password_Camouflage_Count in Password_Numbers_List:
-                    Password_Return += _token
-                    Password_Camouflage_Count += 1
-
-                else:
-                    Password_Camouflage_Count += 1
-
-    Decrypted_Success()
-
-    print('Email: %s' % (Email_Return[::-1]))
-    print('Username: %s' % (Username_Return[::-1]))
-    print('Password: %s' % (Password_Return[::-1]))
-    print()
-
-def PasCam_A():
-    ''' PasCam Program '''
-
-    while True:
-
-        PasCam_Menu()
-
-        if Menu_Option == '1' or Menu_Option == '1.':
-            PasCam_Encode()
-
-            if Encode_Option == '1' or Encode_Option == '1.':
-                PasCam_Encode1()
-
-            elif Encode_Option == '2' or Encode_Option == '2.':
-                PasCam_Encode2()
-
-        elif Menu_Option == '2' or Menu_Option == '2.':
-            PasCam_Decode()
-
-            if input_count == 11130:
-                PasCam_Decode1()
-
-            elif input_count == 11140:
-                PasCam_Decode2()
-
-        elif Menu_Option == '3' or Menu_Option == '3.':
-            PasCam_Encode()
-
-            if Encode_Option == '1' or Encode_Option == '1.':
-                PasCam_Encode1()
-
-            elif Encode_Option == '2' or Encode_Option == '2.':
-                PasCam_Encode2()
-
-def PasCam_Passcode1(PasCam_Input):
-    ''' hiding PasCam 1 of 2 '''
-    global _input, input_length, input_file1
-
-    while True:
-        input_ = input('Enter the %s: ' % (PasCam_Input))
-        _input = input('Re-Enter the %s: ' % (PasCam_Input))
-        print()
-
-        if input_ == _input:
-            input_length = len(_input)
-
-            input_file1 = PasCam_Camouflage(5)
-            with open(input_file1, 'w') as input_open:
-                count = 0
-                n = 24
-                i = 154
-
-                while count < input_length:
-                    number = (random.randint(n, i))
-                    input_open.write('%s\n' % (number))
-                    n = i + 1
-                    i = i + 120
-                    count += 1
-
-            return _input, input_length, input_file1
-
-        else:
-            print('The %ss do not match. Please try again.' % (PasCam_Input))
-            print()
-
-def PasCam_Passcode2(_input, input_length, input_file1):
-    ''' hiding PasCode 2 of 2 '''
-    global input_file2
-
-    input_available = []
-    with open(input_file1, 'r') as input_open1:
-
-        for input_number in input_open1:
-            input_available.append(int(input_number.strip()))
-
-    input_file2 = PasCam_Camouflage(5)
-    with open(input_file2, 'w') as input_open2:
-        input_camouflage = PasCam_Camouflage(5555)
-        count = 0
-
-        while input_length > 0:
-
-            for input_token in input_camouflage:
-
-                if count in input_available:
-                    input_length -= 1
-                    input_open2.write(_input[input_length])
-                    count += 1
-
-                elif count not in input_available:
-                    input_open2.write(input_token)
-                    count += 1
-
-        input_open2.write(PasCam_Camouflage(5555))
-
-    return input_file2
-
-def PasCode_FirstTime():
-    ''' creating PasCam PasCode '''
-
-    with open('PasCode', 'w') as Pas_Code:
-
-        Pas_Code.write(PasCam_Camouflage(5555))
-
-        PasCam_Passcode1('PasCode')
-        Pas_Code.write(input_file1)
-
-        PasCam_Passcode2(_input, input_length, input_file1)
-        Pas_Code.write(input_file2)
-
-        Pas_Code.write(PasCam_Camouflage(5555))
-
-def PasCam_Passcode3():
-    ''' finding PasCam PasCode '''
-    global PasCode_Real
-
-    PasCode_DeCamo = [5556, 5557, 5558, 5559, 5560]
-    PasCode_DeCamo_File = ''
-    PasCode_Camo = [5561, 5562, 5563, 5564, 5565]
-    PasCode_Camo_File = ''
-
-    count_ = 1
-    with open('PasCode', 'r') as input_open:
-
-        for line in input_open:
-            for token in line:
-
-                if count_ in PasCode_DeCamo:
-                    PasCode_DeCamo_File += token
-                    count_ += 1
-
-                elif count_ in PasCode_Camo:
-                    PasCode_Camo_File += token
-                    count_ += 1
-
-                else:
-                    count_ += 1
-
-    PasCode_Numbers_List = []
-    with open(PasCode_DeCamo_File, 'r') as PasCode_Numbers_File:
-
-        for token_ in PasCode_Numbers_File:
-            PasCode_Numbers_List.append(int(token_))
-
-    PasCode_Camouflage_Count = 0
-    PasCode_Return = ''
-    with open(PasCode_Camo_File, 'r') as PasCode_Camouflage_File:
-
-        for _line in PasCode_Camouflage_File:
-            for _token in _line:
-
-                if PasCode_Camouflage_Count in PasCode_Numbers_List:
-                    PasCode_Return += _token
-                    PasCode_Camouflage_Count += 1
-
-                else:
-                    PasCode_Camouflage_Count += 1
-
-    PasCode_Real = PasCode_Return[::-1]
-
-def PasCam_B():
-    ''' includes program, access log, and security '''
-
-    date = datetime.date.today()
-
-    access_count = 0
-    with open('Access_Log', 'r') as access_log:
-        for line in access_log:
-            access_count += 1
-
-    if access_count == 0:
-
-        print('I see this is your first time using PasCam!')
-        print('Create a PasCode you\'ll remember for logging in.')
-        print()
-
-        PasCode_FirstTime()
-
-        with open('Access_Log', 'a') as access_log:
-            access_log.write('\n%s' % (date))
-
-        PasCam_A()
-
-    elif access_count != 0:
-
-        print('Welcome back to PasCam')
-
-        PasCam_Passcode3()
-
-        PasCode_Attempts = 3
-        while PasCode_Attempts > 0:
-
-            PasCode_Entry = input('Enter your PasCode: ')
-            print()
-
-            if PasCode_Entry == PasCode_Real:
-
-                with open('Access_Log', 'a') as access_log:
-                    access_log.write('\n%s' % (date))
-
-                PasCam_A()
+                return
 
             else:
-                PasCode_Attempts -= 1
-                print('PasCode incorrect. %d attempt(s) left.' % (PasCode_Attempts))
+
+                Input_Right = input('Re-Enter {}: '.format(Input_Parameter))
                 print()
 
-# PasCam Program #
-PasCam_B()
+                if Input_Left == Input_Right:
+
+                    return Input_Left
+
+                elif Input_Right == '':
+
+                    return
+
+                else:
+
+                    print('The {}s do not match.\n'.format(Input_Parameter))
+
+        elif Input_String != '':
+
+            print('Spaces are not allowed. Try \'_\' or \'.\' instead.\n')
+
+def PasCam_Input_B():
+    '''  '''
+
+    while True:
+
+        print('(1) \tUsername\n\tPassword\n')
+        print('(2) \tEmail\n\tUsername\n\tPassword\n')
+
+        Input = input('Select a choice: ')
+        print()
+
+        if Input == '1':
+
+            List_Input = ['username', 'password']
+
+        elif Input == '2':
+
+            List_Input = ['email', 'username', 'password']
+
+        elif Input == '':
+
+            return
+
+        else:
+
+            print('Input is invalid.\n')
+            continue
+
+        List_Output = []
+        for List_Element in List_Input:
+
+            Input = PasCam_Input_A(List_Element)
+            List_Output.append(Input)
+
+        return List_Output
+
+def PasCam_Menu_Encrypt():
+    '''  '''
+
+    Encrypt_List = []
+    Encrypt_Input = PasCam_File(1)
+    Encrypt_List.append(Encrypt_Input)
+    Encrypt_Input = PasCam_Input_B()
+    for Encrypt_Element in Encrypt_Input:
+
+        Encrypt_List.append(Encrypt_Element)
+
+    return Encrypt_List
+
+def PasCam_Menu_Decrypt():
+    '''  '''
+
+    Decrypt_Input = PasCam_File(2)
+    return Decrypt_Input
+
+def PasCam_Menu_Update():
+    '''  '''
+
+    Update_List = []
+    Update_Input = PasCam_File(2)
+    Update_List.append(Update_Input)
+    Update_Input = PasCam_Input_B()
+    for Update_Element in Update_Input:
+
+        Update_List.append(Update_Element)
+
+    return Update_List
+
+def PasCam_Camouflage_A(Input_Parameter):
+    ''' [ Input : an integer] [ Output : a random string ] '''
+
+    Camouflage_String = ''
+    Camouflage_Digits = list(string.digits)
+    Camouflage_Symbols = list(string.punctuation)
+    Camouflage_Letters = list(string.ascii_letters)
+    del Camouflage_Symbols[23]
+    while Input_Parameter > 0:
+
+        Camouflage_Token = random.choice(Camouflage_Digits + Camouflage_Symbols + Camouflage_Letters)
+        Camouflage_String += Camouflage_Token
+        Input_Parameter -= 1
+
+    return Camouflage_String
+
+def PasCam_Camouflage_B(Input_Parameter):
+    ''' [ Input : a string ] [ Output : a random list ] '''
+
+    Camouflage_List = []
+    Camouflage_Count_A = 1500
+    Camouflage_Count_B = 3000
+    for Input_Element in Input_Parameter:
+
+        Camouflage_Token = random.randint(Camouflage_Count_A, Camouflage_Count_B)
+        Camouflage_List.append(Camouflage_Token)
+        Camouflage_Count_A = Camouflage_Count_B + 50
+        Camouflage_Count_B = Camouflage_Count_B + 1450
+
+    return Camouflage_List
+
+def PasCam_Encrypt(Input_Parameter):
+    ''' [ Input : an input list ] [ Output : encrypted input ] '''
+
+    Encrypt_String_A = ''
+    Input_Parameter.append(Security_List[2])
+    for Input_Element in Input_Parameter[1:]:
+
+        for Input_Token in Input_Element:
+
+            Encrypt_String_A += Input_Token
+
+        Encrypt_String_A += random.choice(['g[ZJ$L', 'u8a98R'])
+
+    Encrypt_List_A = []
+    Encrypt_Count_A = 0
+    Encrypt_Count_B = 0
+    Encrypt_String_B = ''
+    Encrypt_List_B = PasCam_Camouflage_B(Encrypt_String_A)
+    Encrypt_String_C = PasCam_Camouflage_A(2323 * len(Encrypt_String_A))
+    for Encrypt_Token in Encrypt_String_C:
+
+        if Encrypt_List_B == [] or Encrypt_Count_A != Encrypt_List_B[0]:
+
+            Encrypt_String_B += Encrypt_Token
+            Encrypt_Count_A += 1
+
+        elif Encrypt_Count_A == Encrypt_List_B[0]:
+
+            Encrypt_String_B += Encrypt_String_A[Encrypt_Count_B]
+            Encrypt_List_A.append(Encrypt_List_B[0])
+            del Encrypt_List_B[0]
+            Encrypt_Count_A += 1
+            Encrypt_Count_B += 1
+
+    Encrypt_Count_C = 0
+    Encrypt_String_D = ''
+    Encrypt_List_C = [50, 100, 150, 200]
+    for Encrypt_Token in Encrypt_String_B:
+
+        if Encrypt_Count_C == Encrypt_List_C[3]:
+
+            Encrypt_String_D += '{}\n'.format(Encrypt_Token)
+            Encrypt_Count_C = 0
+
+        elif Encrypt_Count_C in Encrypt_List_C:
+
+            Encrypt_String_D += '{}{}'.format(Encrypt_Token, ' ' * 10)
+            Encrypt_Count_C += 1
+
+        elif Encrypt_Count_C not in Encrypt_List_C:
+
+            Encrypt_String_D += '{}'.format(Encrypt_Token, end='')
+            Encrypt_Count_C += 1
+
+    Encrypt_List_D = []
+    for Encrypt_Integer in Encrypt_List_A:
+
+        Encrypt_Count_D = 0
+        Encrypt_Count_D += 2
+        Encrypt_Integer *= Encrypt_Count_D
+        Encrypt_Count_D += 4
+        Encrypt_Integer *= Encrypt_Count_D
+        Encrypt_List_D.append(str(Encrypt_Integer))
+
+    while True:
+
+        try:
+
+            Encrypt_String_E = PasCam_Camouflage_A(6)
+            with open('{}.txt'.format(Encrypt_String_E), 'w') as Encrypt_File:
+
+                Encrypt_File.write(Encrypt_String_D)
+
+            Encrypt_String_F = PasCam_Camouflage_A(6)
+            with open('{}.txt'.format(Encrypt_String_F), 'w') as Encrypt_File:
+
+                for Encrypt_String in reversed(Encrypt_List_D):
+
+                    Encrypt_String = random.choice(Encrypt_List_D)
+                    Encrypt_File.write('{}\n'.format(Encrypt_String))
+                    Encrypt_List_D.remove(Encrypt_String)
+
+            break
+
+        except FileNotFoundError:
+
+            continue
+
+    Encrypt_Count_E = 0
+    Encrypt_Count_F = 0
+    Encrypt_String_H = ''
+    Encrypt_String_J = ''
+    Encrypt_String_H += Encrypt_String_E
+    Encrypt_String_H += Encrypt_String_F
+    Encrypt_List_E = [2844, 3417, 4557, 6052, 8980, 9383, 11138, 12383, 14790, 15577, 16666, 18770]
+    Encrypt_String_I = PasCam_Camouflage_A(2323 * len(Encrypt_List_E))
+    for Encrypt_Token in Encrypt_String_I:
+
+        if Encrypt_List_E == [] or Encrypt_Count_E != Encrypt_List_E[0]:
+
+            Encrypt_String_J += Encrypt_Token
+            Encrypt_Count_E += 1
+
+        elif Encrypt_Count_E == Encrypt_List_E[0]:
+
+            Encrypt_String_J += Encrypt_String_H[Encrypt_Count_F]
+            del Encrypt_List_E[0]
+            Encrypt_Count_E += 1
+            Encrypt_Count_F += 1
+
+    Encrypt_Count_G = 0
+    Encrypt_String_K = ''
+    Encrypt_List_F = [50, 100, 150, 200]
+    for Encrypt_Token in Encrypt_String_J:
+
+        if Encrypt_Count_G == Encrypt_List_F[3]:
+
+            Encrypt_String_K += '{}\n'.format(Encrypt_Token)
+            Encrypt_Count_G = 0
+
+        elif Encrypt_Count_G in Encrypt_List_F:
+
+            Encrypt_String_K += '{}{}'.format(Encrypt_Token, ' ' * 10)
+            Encrypt_Count_G += 1
+
+        elif Encrypt_Count_G not in Encrypt_List_F:
+
+            Encrypt_String_K += '{}'.format(Encrypt_Token, end='')
+            Encrypt_Count_G += 1
+
+    with open('{}'.format(Input_Parameter[0]), 'w') as Encrypt_File:
+
+        Encrypt_File.write(Encrypt_String_K)
+
+    PasCam_Directory.append(Input_Parameter[0])
+
+def PasCam_Decrypt(Input_Parameter_A, Input_Parameter_B):
+    ''' [ Input : a string ] [ Output : decrypted input ] '''
+
+    Encrypt_String_A = ''
+    with open(Input_Parameter_A, 'r') as Encrypt_File:
+
+        for Encrypt_Line in Encrypt_File:
+
+            Encrypt_Line = Encrypt_Line.strip('\n')
+            for Encrypt_Token in Encrypt_Line:
+
+                if Encrypt_Token != ' ':
+
+                    Encrypt_String_A += Encrypt_Token
+
+    Encrypt_Count_A = 0
+    Encrypt_String_B = ''
+    Encrypt_List_A = [2844, 3417, 4557, 6052, 8980, 9383, 11138, 12383, 14790, 15577, 16666, 18770]
+    for Encrypt_Token in Encrypt_String_A:
+
+        if Encrypt_List_A == [] or Encrypt_Count_A != Encrypt_List_A[0]:
+
+            Encrypt_Count_A += 1
+
+        elif Encrypt_Count_A == Encrypt_List_A[0]:
+
+            Encrypt_String_B += Encrypt_Token
+            del Encrypt_List_A[0]
+            Encrypt_Count_A += 1
+
+    Encrypt_String_C = ''
+    with open('{}.txt'.format(Encrypt_String_B[0:6]), 'r') as Encrypt_File:
+
+        for Encrypt_Line in Encrypt_File:
+
+            Encrypt_Line = Encrypt_Line.strip('\n')
+            for Encrypt_Token in Encrypt_Line:
+
+                if Encrypt_Token != ' ':
+
+                    Encrypt_String_C += Encrypt_Token
+
+    Encrypt_List_B = []
+    with open('{}.txt'.format(Encrypt_String_B[6:12]), 'r') as Encrypt_File:
+
+        for Encrypt_Integer in Encrypt_File:
+
+            Encrypt_Integer = Encrypt_Integer.strip('\n')
+            Encrypt_Integer = int(Encrypt_Integer)
+            Encrypt_List_B.append(Encrypt_Integer)
+
+    Encrypt_List_C = []
+    while True:
+
+        if Encrypt_List_B == []:
+
+            break
+
+        else:
+
+            Encrypt_Token = min(Encrypt_List_B)
+            Encrypt_List_C.append(Encrypt_Token)
+            Encrypt_List_B.remove(Encrypt_Token)
+
+    Encrypt_List_D = []
+    for Encrypt_Integer in Encrypt_List_C:
+
+        Encrypt_Count_B = 0
+        Encrypt_Count_B += 2
+        Encrypt_Integer /= Encrypt_Count_B
+        Encrypt_Count_B += 4
+        Encrypt_Integer /= Encrypt_Count_B
+        Encrypt_List_D.append(int(Encrypt_Integer))
+
+    Encrypt_Count_C = 0
+    Encrypt_List_E = ''
+    for Encrypt_Token in Encrypt_String_C:
+
+        if Encrypt_List_D == [] or Encrypt_Count_C != Encrypt_List_D[0]:
+
+            Encrypt_Count_C += 1
+
+        elif Encrypt_Count_C == Encrypt_List_D[0]:
+
+            Encrypt_List_E += Encrypt_Token
+            del Encrypt_List_D[0]
+            Encrypt_Count_C += 1
+
+    Encrypt_List_E = Encrypt_List_E[:-6]
+    Encrypt_List_E = Encrypt_List_E.replace('g[ZJ$L', ' ').replace('u8a98R', ' ')
+    Encrypt_List_E = Encrypt_List_E.split(' ')
+
+    if Input_Parameter_B == 1:
+
+        if Encrypt_List_E[-1] == Security_List[2]:
+
+            if len(Encrypt_List_E) == 3:
+
+                print('Username:\t{}\nPassword:\t{}\n'.format(Encrypt_List_E[0], Encrypt_List_E[1]))
+
+            elif len(Encrypt_List_E) == 4:
+
+                print('Email:\t\t{}\nUsername:\t{}\nPassword:\t{}\n'.format(Encrypt_List_E[0], Encrypt_List_E[1], Encrypt_List_E[2]))
+
+        elif Encrypt_List_E[-1] != Security_List[2]:
+
+            print('File tag does not match. File was deleted for security purposes.\n')
+
+    elif Input_Parameter_B == 2:
+
+            return Encrypt_List_E
+
+def PasCam_Security():
+    ''' [ Input : N/A ] [ Output : list of security information ] '''
+
+    global Security_List
+
+    while True:
+
+        if 'PasCam.txt' in PasCam_Directory:
+
+            Security_Count = 0
+            Security_List = PasCam_Decrypt('PasCam.txt', 2)
+            while Security_Count < 5:
+
+                Security_Variable = input('Password: ')
+                print()
+
+                if Security_Variable == Security_List[0]:
+
+                    with open('Access Log.txt', 'a') as Security_File:
+
+                        Security_File.write('{}\n'.format(datetime.date.today()))
+
+                    print('Welcome back, {}.\n'.format(Security_List[1])), time.sleep(1)
+                    return True
+
+                elif Security_Variable != Security_List[0]:
+
+                    print('Password entered was incorrect.\n')
+                    Security_Count += 1
+
+            return False
+
+        elif 'PasCam.txt' not in PasCam_Directory:
+
+            Security_List = []
+            Security_List.append('PasCam.txt')
+            print('Welcome to PasCam. Let\'s get you started.\n'), time.sleep(1)
+            print('Create a password for your PasCam that you will remember.')
+            print('This will be the only password that you have to memorize.\n')
+            Security_Variable = PasCam_Input_A('password')
+            Security_List.append(Security_Variable)
+
+            print('What should I call you?\n')
+            Security_Variable = PasCam_Input_A('name')
+            Security_List.append(Security_Variable)
+
+            Security_Variable = PasCam_Camouflage_A(6)
+            Security_List.append(Security_Variable)
+            PasCam_Encrypt(Security_List)
+            Security_List = PasCam_Decrypt('PasCam.txt', 2)
+
+            with open('Access Log.txt', 'w') as Security_File:
+
+                Security_File.write('{}\n'.format(datetime.date.today()))
+
+            print('You\'re all set. Welcome to PasCam, {}.\n'.format(Security_List[1])), time.sleep(1)
+
+            return True
+
+def PasCam_Help_Menu():
+    ''' [ Input : N/A ] [ Output : a help screen ] '''
+
+    print(' - Encrypt Information means to input information you wish to hide.\n')
+    print('\t - Must be a unique file name; you may not overwrite one that already exists.\n')
+    print(' - Decrypt Information means to output information you wish to find.\n')
+    print('\t - File must exist already in order to decrypt.\n')
+    print(' - Update Information means to renew information that you\'ve hidden.\n')
+    print('\t - File must already exist in order to update information.\n')
+    print(' - You have the capability of returning to the menu simply by pressing enter.\n')
+    print('\t - Input must be blank before exiting.\n')
+    print(' - No spaces are allowed.\n')
+    print(' - \'Username/Password\' : the information you wish to hide contains only a username and password\n')
+    print(' - \'Email/Username/Password\' : the information you wish to hide contains only an email, username and password.\n')
+    input('Press enter to return to the main menu.\n')
+
+# PasCam : Output #
+
+PasCam_Directory()
+PasCam_Security = PasCam_Security()
+if (PasCam_Security == True):
+
+    while True:
+
+        try:
+
+            PasCam_Input = PasCam_Menu()
+
+            if PasCam_Input == '1':
+
+                PasCam_Input = PasCam_Menu_Encrypt()
+                PasCam_Encrypt(PasCam_Input)
+                time.sleep(0.5), print('Information encrypted.\n'), time.sleep(0.5)
+
+            elif PasCam_Input == '2':
+
+                PasCam_Input = PasCam_Menu_Decrypt()
+                PasCam_Decrypt(PasCam_Input, 1)
+
+            elif PasCam_Input == '3':
+
+                PasCam_Input = PasCam_Menu_Update()
+                PasCam_Encrypt(PasCam_Input)
+                time.sleep(0.5), print('Information updated.\n'), time.sleep(0.5)
+
+            elif PasCam_Input == '4':
+
+                PasCam_Help_Menu()
+                time.sleep(0.5)
+
+            else:
+
+                print('Input is invalid.\n')
+
+        except TypeError:
+
+            continue

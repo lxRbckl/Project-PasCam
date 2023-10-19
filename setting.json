@@ -1,0 +1,43 @@
+{
+  "alias" : {
+    "show" : [
+      "show",
+      "Show",
+      "SHOW"
+    ],
+    "encrypt" : [
+      "encr",
+      "Encr",
+      "ENCR",
+      "encrypt",
+      "Encrypt",
+      "ENCRYPT"
+    ],
+    "decrypt" : [
+      "decr",
+      "Decr",
+      "DECR",
+      "decrypt",
+      "Decrypt",
+      "DECRYPT"
+    ],
+    "update" : [
+      "update",
+      "Update",
+      "UPDATE"
+    ],
+    "delete" : [
+      "del",
+      "Del",
+      "DEL",
+      "delete",
+      "Delete",
+      "DELETE"
+    ],
+    "share" : [
+      "share",
+      "Share",
+      "SHARE"
+    ]
+  }
+}

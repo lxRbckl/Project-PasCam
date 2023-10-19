@@ -1,181 +1,379 @@
-# Project PasCam 6 by Alex Arbuckle #
+# Project PasCam 7 by Alex Arbuckle #
 
 
-# Import <
+# import <
 from random import choice
-from string import digits
+from json import load, dump
 from discord import Intents
-from discord.ext.commands import Bot
-from os import path, listdir, remove, mkdir
-from string import ascii_letters as letters
+from string import printable
+from discord.ext import commands
+from os import path, listdir, mkdir, remove
 
 # >
 
 
-# Declaration <
-path = path.realpath(__file__)[:-10]
-PasCam = Bot(command_prefix = '', intents = Intents.all())
+# global <
+realpath = path.realpath(__file__).split('/')
+directory = '/'.join(realpath[:(len(realpath) - 1)])
+PasCam = commands.Bot(command_prefix = '', intents = Intents.all())
 token = ''
 
 # >
 
 
-@PasCam.event
-async def on_member_join(user):
-    ''' user : class '''
+def jsonLoad(file: str) -> list:
+    '''  '''
 
-    # If New User <
-    if (str(user)[:-5] not in [i for i in listdir(path)]):
+    # get file <
+    # get data <
+    with open(f'{directory}/{file}', 'r') as fin:
 
-        mkdir(f'{path}/{str(user)[:-5]}')
-        await user.send(f'Welcome to PasCam, {str(user)[:-5]}')
-
-    # >
-
-    else:
-
-        await user.send(f'Welcome back to PasCam, {str(user)[:-5]}')
-
-
-async def functionEncrypt(ctx, args):
-    ''' args[0] : str
-        args[1] : str '''
-
-    strVariable = '{}{}{}'.format(args[0], 'space'.join(args[1:]), args[0])
-    listVariableA = [choice(letters + digits) for i in range(555555 - len(strVariable))]
-    listVariableB = [int((((int(str(ctx)[-4:])) + i) * i) / 10) for i in range(len(strVariable))]
-    with open(f'{path}/{str(ctx)[:-5]}/{args[0]}.txt', 'w') as fileVariable:
-
-        [listVariableA.insert(i, strVariable[listVariableB.index(i)]) for i in listVariableB]
-        fileVariable.write(''.join(listVariableA))
-
-
-async def functionDecrypt(ctx, arg):
-    ''' arg : str '''
-
-    listVariable = [int((((int(str(ctx)[-4:])) + i) * i) / 10) for i in range(500)]
-    with open(f'{path}/{str(ctx)[:-5]}/{arg}.txt', 'r') as fileVariable:
-
-        strVariable = ''.join(i for i in fileVariable)
-        strVariable = ''.join(strVariable[i] for i in listVariable)
-
-    return strVariable.split(arg)[1].split('space')
-
-
-@PasCam.command(aliases = ['encr', 'encrypt', 'Encrypt'])
-async def commandEncrypt(ctx, *args):
-    ''' args[0] : str
-        args[0<] : str '''
-
-    # If Information Exists <
-    if (args[0] in [i[:-4] for i in listdir(f'{path}/{str(ctx.author)[:-5]}')]):
-
-        await ctx.author.send(f'Your information **{args[0]}** already exists.', delete_after = 60)
+        return load(fin)
 
     # >
 
-    else:
 
-        await functionEncrypt(ctx.author, args)
-        await ctx.author.send(f'Your information **{args[0]}** was encrypted.')
+def jsonDump(file: str, data: dict) -> None:
+    '''  '''
 
+    # set file <
+    # set data <
+    with open(f'{directory}/{file}', 'w') as fout:
 
-@PasCam.command(aliases = ['decr', 'decrypt', 'Decrypt'])
-async def commandDecrypt(ctx, arg):
-    ''' arg : str '''
-
-    # If Information Exists <
-    if (arg in [i[:-4] for i in listdir('{}/{}'.format(path, str(ctx.author)[:-5]))]):
-
-        await ctx.author.send('\n'.join(await functionDecrypt(ctx.author, arg)), delete_after = 60)
+        dump(data, fout, indent = 3)
 
     # >
 
-    else:
 
-        await ctx.author.send(f'Your information **{arg}** does not exist.', delete_after = 60)
+def encryptFunction(host: str, file: str, encr: str) -> None:
+    '''  '''
 
-
-@PasCam.command(aliases = ['update', 'Update'])
-async def commandUpdate(ctx, *args):
-    ''' args[0] : str
-        args[0<] : str'''
-
-    # If Information Exists <
-    if (args[0] in [i[:-4] for i in listdir(f'{path}/{str(ctx.author)[:-5]}')]):
-
-        await functionEncrypt(ctx.author, args)
-        await ctx.author.send(f'Your information **{args[0]}** was updated.')
+    # local <
+    char = printable[0:77] + printable[79:85] + printable[86:94]
+    strList = [choice(char) for i in range(250000)]
+    encrList = [sum([ord(i) for i in host])]
 
     # >
 
-    else:
-
-        await ctx.author.send(f'Your information **{args[0]}** does not exist.', delete_after = 60)
-
-
-@PasCam.command(aliases = ['del', 'delete', 'Delete'])
-async def commandDelete(ctx, arg):
-    ''' arg : str '''
-
-    # If Information Exists <
-    if (arg in [i[:-4] for i in listdir(f'{path}/{str(ctx.author)[:-5]}')]):
-
-        remove(f'{path}/{str(ctx.author)[:-5]}/{arg}')
-        await ctx.author.send(f'Your information **{arg}** was deleted.', delete_after = 60)
+    # set index list <
+    # set value from index <
+    [encrList.append(encrList[-1] + ord(i)) for i in encr[:len(encr)]]
+    [strList.insert(i, encr[c]) for c, i in enumerate(encrList[:len(encrList) - 1])]
 
     # >
 
-    else:
+    # set <
+    jsonDump(file = f'{host}/{file}.json', data = strList)
 
-        await ctx.author.send(f'Your information **{arg}** does not exist.', delete_after = 60)
+    # >
 
 
-@PasCam.command(aliases = ['share', 'Share'])
-async def commandShare(ctx, *args):
-    ''' args[0] : str
-        args[1] : str '''
+def decryptFunction(host: str, file: str) -> str:
+    '''  '''
 
-    for i in PasCam.get_all_members():
+    # local <
+    decrList = [sum([ord(i) for i in host])]
+    strList = jsonLoad(file=f'{host}/{file}.json')
 
-        # If Input User <
-        if (str(i) == args[0]):
+    # >
 
-            # If Information Exists <
-            if (args[1] in [j[:-4] for j in listdir(f'{path}/{str(i)[:-5]}')]):
+    # get index list <
+    # output str values from indices <
+    [decrList.append(decrList[-1] + ord(strList[decrList[-1]])) for i in range(2000)]
+    return ''.join([strList[i] for i in decrList])
 
-                await ctx.author.send(f'**{args[1]}** for **{str(i)[:-5]}** already exists.', delete_after = 60)
+    # >
 
-            # >
 
-            else:
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['encrypt'])
+async def encryptCommand(ctx, file: str, *args, encr = None):
+    '''  '''
 
-                # Stack <
-                listVariableA = [args[1]]
-                [listVariableA.append(i) for i in await functionDecrypt(ctx.author, args[1])]
+    # if (new host) <
+    # then (existing host) <
+    if (str(ctx.author) not in listdir(directory)):
 
-                # >
+        # set directory <
+        # set profile <
+        # reset <
+        mkdir(f'{directory}/{str(ctx.author)}')
+        encryptFunction(
 
-                await functionEncrypt(i, listVariableA)
+            host = str(ctx.author),
+            file = str(ctx.author),
+            encr = str(ctx.author.id) + ';;'
 
-                await ctx.author.send(f'Your information **{args[1]}** was shared with **{str(i)[:-5]}**.')
-                await i.send(f'**{str(ctx.author)[:-5]}** has shared **{args[1]}** with you.')
+        )
+        await encryptCommand(ctx, file, encr = args)
 
         # >
 
+    else:
 
-@PasCam.command(aliases = ['show', 'Show'])
-async def commandShow(ctx):
+        # if (new file) <
+        # then (existing file) <
+        if (f'{file}.json' not in listdir(f'{directory}/{str(ctx.author)}')):
+
+            # format <
+            encr = '::'.join(encr) if (encr) else '::'.join(args)
+            encr += ';;' + str(ctx.author) + ';;'
+
+            # >
+
+            encryptFunction(
+
+                file = file,
+                encr = encr,
+                host = str(ctx.author)
+
+            )
+
+            await ctx.author.send(f'`{file} was encrypted.`', delete_after = 60)
+
+        else: await ctx.author.send(f'`{file} already exists.`', delete_after = 60)
+
+        # >
+
+    # >
+
+
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['decrypt'])
+async def decryptCommand(ctx, file: str, host = None):
     '''  '''
 
-    listVariable = sorted([i[:-4] for i in listdir(f'{path}/{str(ctx.author)[:-5]}')])
-    await ctx.author.send('\n'.join(listVariable), delete_after = 60)
+    # if (existing file) <
+    # then (new file) <
+    if (f'{file}.json' in listdir(f'{directory}/{str(ctx.author)}')):
+
+        decr, share, other = decryptFunction(
+
+            file = file,
+            host = host if (host) else str(ctx.author)
+
+        ).split(';;')
+
+        # if (shared file) <
+        # elif (has access) <
+        # then (no access) <
+        if ('(+)' in decr):
+
+            await decryptCommand(
+
+                ctx,
+                file = file,
+                host = decr.split('::')[1]
+
+            )
+
+        elif (str(ctx.author) in share):
+
+            await ctx.author.send(
+
+                delete_after = 60,
+                content = '||`{}`||'.format(decr.replace('::', '\n'))
+
+            )
+
+        else: await ctx.author.send(f'`{file} does not exist.`', delete_after = 60)
+
+        # >
+
+    else: await ctx.author.send(f'`{file} does not exist.`', delete_after = 60)
+
+    # >
 
 
-# Main <
-if (__name__ == '__main__'):
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['update'])
+async def updateCommand(ctx, file: str, *args):
+    '''  '''
 
-    PasCam.run(token)
+    # if (existing file) <
+    # then (new file) <
+    if (f'{file}.json' in listdir(f'{directory}/{str(ctx.author)}')):
+
+        decr, share, other = decryptFunction(
+
+            file = file,
+            host = str(ctx.author)
+
+        ).split(';;')
+
+        share = share if (share) else str(ctx.author)
+        encryptFunction(
+
+            file = file,
+            host = str(ctx.author),
+            encr = '::'.join(args) + ';;' + share + ';;'
+
+        )
+
+        # output <
+        await ctx.author.send(f'`{file} was updated.`', delete_after = 60)
+
+        # >
+
+    else: await ctx.author.send(f'`{file} does not exist.`', delete_after = 60)
+
+    # >
+
+
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['delete'])
+async def deleteCommand(ctx, file: str):
+    '''  '''
+
+    # if (existing file) <
+    # then (new file) <
+    if (f'{file}.json' in listdir(f'{directory}/{str(ctx.author)}')):
+
+        # remove file <
+        # output update <
+        remove(f'{directory}/{str(ctx.author)}/{file}.json')
+        await ctx.author.send(f'`{file} was removed.`', delete_after = 60)
+
+        # >
+
+    else: await ctx.author.send(f'`{file} does not exist.`', delete_after = 60)
+
+    # >
+
+
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['share'])
+async def shareCommand(ctx, action: str, file: str, user: str):
+    '''  '''
+
+    # if ((existing user) and (existing file)) <
+    # then (new file) or (unavailable user) <
+    if (user in listdir(directory)):
+
+        auth = str(ctx.author)
+        decr, share, other = decryptFunction(
+
+            file = file,
+            host = auth
+
+        ).split(';;')
+
+        # local <
+        shareA = share.split('::')
+        shareB = share.split('::')
+        notShare = '(+)' not in decr
+        checkUser = user not in shareA
+        isAdd = 'add' in action.lower()
+        isRemove = 'rem' in action.lower()
+        checkFile = (f'{file}.json' not in listdir(f'{directory}/{user}'))
+
+        # >
+
+        # if (update) <
+        # then (no action) <
+        if ((isAdd) or (isRemove)):
+
+            # if (remove action) <
+            # elif (add action) <
+            if ((isRemove) and (not checkUser) and (notShare)): shareA.remove(user)
+            elif ((isAdd) and (checkFile) and (checkUser) and (notShare)):
+
+                shareA.append(user)
+                encryptFunction(
+
+                    host = user,
+                    file = file,
+                    encr = f'(+)::{auth}' + ';;;;'
+
+                )
+
+            # >
+
+            # if (update) <
+            # then (no update) <
+            if (shareA != shareB):
+
+                a = 'added' if (shareA > shareB) else 'removed'
+                encryptFunction(
+
+                    host = auth,
+                    file = file,
+                    encr = ';;'.join([decr, '::'.join(shareA)]) + ';;'
+
+                )
+                uid, other = decryptFunction(
+
+                    host = user,
+                    file = user
+
+                ).split(';;')
+
+                # notify host <
+                # notify recipient <
+                await ctx.author.send(f'`{file} was {a} to {user}.`')
+                await PasCam.get_user(int(uid)).send(f'`{auth} {a} {file}.`')
+
+                # >
+
+            else: await ctx.author.send('`Failed to share.`', delete_after = 60)
+
+            # >
+
+        else: await ctx.author.send('`Failed to share.`', delete_after = 60)
+
+        # >
+
+    else: await ctx.author.send('`File/User does not exist.`', delete_after = 60)
+
+    # >
+
+
+@PasCam.command(aliases = jsonLoad(file = 'setting.json')['alias']['show'])
+async def showCommand(ctx, file = None):
+    '''  '''
+
+    # if (single file) <
+    # then (all files) <
+    if (f'{file}.json' in listdir(f'{directory}/{str(ctx.author)}')):
+
+        decr, share, other = decryptFunction(
+
+            file = file,
+            host = str(ctx.author)
+
+        ).split(';;')
+
+        # if (not shared file) <
+        # then (shared file) <
+        if ('(+)' not in decr):
+
+            await ctx.author.send(
+
+                delete_after = 60,
+                content='\n'.join([f'`{i}`' for i in share.split('::')])
+
+            )
+
+        else: await ctx.author.send(f'`{file} is shared.`', delete_after=60)
+
+        # >
+
+    else:
+
+        # get list <
+        # filter list <
+        show = [f'`{i[:-5]}`' for i in listdir(f'{directory}/{str(ctx.author)}')]
+        show.remove(f'`{str(ctx.author)}`')
+
+        # >
+
+        # if (empty) <
+        # then (not empty) <
+        if (len(show) == 0): await ctx.author.send('`Empty directory.`', delete_after = 60)
+        else: await ctx.author.send('\n'.join(sorted(show)), delete_after = 60)
+
+        # >
+
+    # >
+
+
+# main <
+if (__name__ == '__main__'): PasCam.run(token)
 
 # >
 

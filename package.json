@@ -1,18 +1,17 @@
 {
-  "name": "project-pascam-7b",
+  "name": "project-pascam",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "> Encrypt your passwords now and retrieve them later using a Discord bot. Fall 2023.",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord": "^0.8.2",
-    "mocha": "^10.2.0"
+    "lxrbckl": "^2.1.0"
   }
 }

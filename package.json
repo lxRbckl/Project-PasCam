@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^14.13.0",
     "lxrbckl": "^2.1.0"
   }
 }

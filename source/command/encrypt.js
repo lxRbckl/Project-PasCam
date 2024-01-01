@@ -6,7 +6,15 @@
 
 class encrypt {
 
-   constructor() {
+   constructor(
+
+      ivSize = 16,
+      keySize = 32,
+      outputEncoding = 'hex',
+      inputEncoding = 'utf-8',
+      algorithm = 'aes-256-cbc'
+
+   ) {
 
       
 

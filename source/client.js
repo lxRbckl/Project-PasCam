@@ -20,36 +20,36 @@ class client {
 
    constructor(
 
-      token,
+      pToken,
+      pGuildId,
+      pChannelId,
+      pApplicationId,
 
-      guildId = '970204828858990593',
-      channelId = '1129843141101498378',
-      applicationId = '976408750070054943'
+      maxMembers = 15
 
    ) {
 
       // variables <
-      this.token = token;
-      this.guildId = guildId;
-      this.channelId = channelId;
-      this.applicationId = applicationId;
+      this.token = pToken;
+      this.guildId = pGuildId;
+      this.channelId = pChannelId;
+      this.maxMembers = maxMembers;
+      this.applicationId = pApplicationId;
 
       // >
 
-      
       // commands <
       this.commands = {
 
-         'show' : new show(),
-         'share' : new share(),
-         'remove' : new remove(),
          'encrypt' : new encrypt(),
          'decrypt' : new decrypt(),
+         'remove' : new remove(),
+         'share' : new share(),
+         'show' : new show()
 
       };
 
       // >
-
 
       // objects <
       this.client = new Client({
@@ -64,6 +64,40 @@ class client {
 
          ]
 
+      });
+
+      // >
+
+   }
+
+
+   database() {
+
+
+
+   }
+
+
+   message() {
+
+
+
+   }
+
+
+   listen() {
+
+      // event (new input) <
+      // event (new member) <
+      this.client.on('interactionCreate', async (interaction) => {
+
+
+
+      });
+      this.client.on('guildMemberAdd', async (member) => {
+
+
+
       })
 
       // >
@@ -71,16 +105,22 @@ class client {
    }
 
 
-   listen() {
-
-
-
-   }
-
-
    run() {
 
+      this.client.login(this.token);
+      this.client.rest.put(
 
+         Routes.applicationGuildCommands(
+
+            this.applicationId,
+            this.guildId
+
+         ),
+         {body : Object.values(this.commands).map((i) => {i.context();})}
+
+      );
+
+      this.listen();
 
    }
 
@@ -88,6 +128,6 @@ class client {
 
 
 // export <
-
+module.exports = client;
 
 // >

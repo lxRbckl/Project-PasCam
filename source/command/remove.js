@@ -51,3 +51,32 @@ class remove {
 module.exports = remove;
 
 // >
+
+
+
+
+
+
+
+
+
+
+// async function remove(input) {
+
+//    const filePath = `${input.tag}/${input.file}`;
+//    const [owner, ...share] = input.users[input.tag]['files'][input.file];
+
+//    // if (is owner) <
+//    if (owner.includes(input.tag)) {
+
+//        input.users[input.tag]['update'] = true;
+//        await delFile({file : `${dataPath}/${filePath}`});
+//        delete input.users[input.tag]['files'][input.file];
+
+//        return {'body' : `The file **${input.file}** was removed.`}
+
+//    }
+
+//    // >
+
+// }

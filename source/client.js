@@ -78,9 +78,54 @@ class client {
    }
 
 
-   message() {
+   message(
 
+      pKind,
+      pTitle,
+      pContent
 
+   ) {
+
+      const embed = {
+
+         title : pTitle,
+         description : pContent,
+         footer : {
+
+            'text' : {
+
+               'interaction' : 'No one else can see this message.',
+               'member' : 'Do not alter or manipulate this message.'
+
+            }[pKind]
+
+         }
+
+      };
+      
+      return {
+
+         'member' : async () => {
+
+            await this.client.send({
+
+               embeds : [embed]
+
+            });
+
+         },
+         'interaction' : async () => {
+
+            await this.client.reply({
+
+               embeds : [embed],
+               ephemeral : true
+
+            });
+
+         }
+
+      }[kind];
 
    }
 
@@ -98,7 +143,7 @@ class client {
 
 
 
-      })
+      });
 
       // >
 

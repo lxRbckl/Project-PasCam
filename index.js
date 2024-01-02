@@ -11,7 +11,7 @@ const client = require('./source/client.js');
 const guildId = '970204828858990593';
 const channelId = '1129843141101498378';
 const applicationId = '976408750070054943';
-const token = 'OTc2NDA4NzUwMDcwMDU0OTQz.Gc750P.TBr6p6LFD9mfhqOWhFzhq3BzkRTaTTCoITqAA0';
+const token = 'demo';
 
 // >
 

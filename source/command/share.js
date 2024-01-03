@@ -33,9 +33,34 @@ class share {
             {
 
                type : 3,
+               name : 'action',
+               required : true,
+               description : 'description',
+               choices : [
+
+                  {
+
+                     name : 'add',
+                     value : 'add'
+
+                  },
+                  {
+
+                     name : 'remove',
+                     value : 'remove'
+
+                  }
+
+               ]
+
+            },
+            {
+
+               type : 3,
                name : 'to',
                required : true,
                description : 'description'
+               // add list of users to choose from
 
             }
 

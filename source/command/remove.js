@@ -1,5 +1,5 @@
 // import <
-
+const decrypt = require('./decrypt.js');
 
 // >
 
@@ -8,7 +8,7 @@ class remove {
 
    constructor() {
 
-
+      this.decrypt = new decrypt();
 
    }
 

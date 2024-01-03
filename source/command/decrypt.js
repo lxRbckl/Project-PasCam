@@ -1,15 +1,17 @@
 // import <
+const encrypt = require('./encrypt.js');
 
+const {createDecipheriv} = require('crypto');
 
 // >
 
 
-class decrypt {
+class decrypt extends encrypt {
 
    constructor() {
 
-
-
+      super();
+      
    }
 
 
@@ -38,9 +40,15 @@ class decrypt {
    }
 
 
-   async run() {
+   async run(
 
+      pTag,
+      pFile,
+      pUsers
 
+   ) {
+
+      
       
    }
 

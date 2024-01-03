@@ -11,17 +11,13 @@ const {
 
 class encrypt {
 
-   constructor(
+   constructor() {
 
-      ivSize = 16,
-      keySize = 32,
-      outputEncoding = 'hex',
-      inputEncoding = 'utf-8',
-      algorithm = 'aes-256-cbc'
-
-   ) {
-
-      
+      this.ivSize = 16,
+      this.keySize = 32,
+      this.outputEncoding = 'hex',
+      this.inputEncoding = 'utf-8',
+      this.algorithm = 'aes-256-cbc'
 
    }
 
@@ -58,9 +54,41 @@ class encrypt {
 
    }
 
-   async run() {
 
-      
+   async run({
+
+      pTag,
+      pFile,
+      pUsers,
+      pContent
+
+   }) {
+
+      // setup <
+      // encrypt <
+      const cipher = createCipheriv(
+
+         this.algorithm,
+         pUsers[pTag]['key'],
+         randomBytes(this.ivSize)
+
+      );
+
+
+      // const encrypted = Buffer.concat([
+
+      //    cipher.update(
+          
+      //       pContent,
+      //       this.inputEncoding,
+      //       this.outputEncoding
+            
+      //    ),
+      //    cipher.final()
+
+      // ]);
+
+      // >
 
    }
 

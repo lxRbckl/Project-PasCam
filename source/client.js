@@ -1,4 +1,5 @@
 // import <
+const {randomBytes} = require('crypto');
 const {
 
    Routes,
@@ -7,6 +8,7 @@ const {
 
 } = require('discord.js');
 
+const database = require('./database.js');
 const show = require('./command/show.js');
 const share = require('./command/share.js');
 const remove = require('./command/remove.js');
@@ -18,23 +20,43 @@ const encrypt = require('./command/encrypt.js');
 
 class client {
 
-   constructor(
+   constructor({
 
       pToken,
       pGuildId,
       pChannelId,
+      pMaxMembers,
       pApplicationId,
 
-      maxMembers = 15
+   }) {
 
-   ) {
-
-      // variables <
+      // setup <
       this.token = pToken;
       this.guildId = pGuildId;
       this.channelId = pChannelId;
-      this.maxMembers = maxMembers;
+      this.maxMembers = pMaxMembers;
       this.applicationId = pApplicationId;
+
+      this.client = new Client({
+
+         rest : {version : '10'},
+         intents : [
+
+            IntentsBitField.Flags.Guilds,
+            IntentsBitField.Flags.GuildMembers,
+            IntentsBitField.Flags.GuildMessages,
+            IntentsBitField.Flags.MessageContent
+
+         ]
+
+      });
+      this.database = new database({
+
+         'pClient' : this.client,
+         'pChannelId' : this.channelId,
+         'pMaxMembers' : this.maxMembers
+         
+      });
 
       // >
 
@@ -51,48 +73,29 @@ class client {
 
       // >
 
-      // objects <
-      this.client = new Client({
-
-         rest : {version : '10'},
-         intents : [
-
-            IntentsBitField.Flags.Guilds,
-            IntentsBitField.Flags.GuildMembers,
-            IntentsBitField.Flags.GuildMessages,
-            IntentsBitField.Flags.MessageContent
-
-         ]
-
-      });
-
-      // >
-
    }
 
 
-   database() {
-
-
-
-   }
-
-
-   message(
+   async message({
 
       pKind,
+      pIcon,
       pTitle,
-      pContent
+      pContent,
+      
+      pChannel = undefined,
+      pInteraction = undefined
 
-   ) {
+   }) {
 
       const embed = {
 
-         title : pTitle,
-         description : pContent,
+         title : `\`${pTitle}\``,
+         thumbnail : {url : pIcon},
+         description : `\`${pContent}\``,
          footer : {
 
-            'text' : {
+            text : {
 
                'interaction' : 'No one else can see this message.',
                'member' : 'Do not alter or manipulate this message.'
@@ -107,7 +110,7 @@ class client {
 
          'member' : async () => {
 
-            await this.client.send({
+            await pChannel.send({
 
                embeds : [embed]
 
@@ -116,7 +119,7 @@ class client {
          },
          'interaction' : async () => {
 
-            await this.client.reply({
+            await pInteraction.reply({
 
                embeds : [embed],
                ephemeral : true
@@ -125,7 +128,7 @@ class client {
 
          }
 
-      }[kind];
+      }[pKind]();
 
    }
 
@@ -136,12 +139,20 @@ class client {
       // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {
 
-
+         // console.log(await this.database.get()); // remove
 
       });
       this.client.on('guildMemberAdd', async (member) => {
 
+         await this.message({
 
+            pKind : 'member',
+            pContent : member.user.id,
+            pTitle : member.user.username,
+            pIcon : member.user.displayAvatarURL(),
+            pChannel : this.client.channels.cache.get(this.channelId)
+
+         })
 
       });
 
@@ -150,22 +161,22 @@ class client {
    }
 
 
-   run() {
+   async run() {
 
       this.client.login(this.token);
       this.client.rest.put(
-
+ 
          Routes.applicationGuildCommands(
 
             this.applicationId,
             this.guildId
 
          ),
-         {body : Object.values(this.commands).map((i) => {i.context();})}
+         {body : Object.values(this.commands).map((i) => {return i.context();})}
 
       );
 
-      this.listen();
+      // this.listen();
 
    }
 

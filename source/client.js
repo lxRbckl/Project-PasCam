@@ -79,10 +79,10 @@ class client {
    async message({
 
       pKind,
-      pIcon,
       pTitle,
       pContent,
-      
+
+      pIcon = undefined,
       pChannel = undefined,
       pInteraction = undefined
 
@@ -139,7 +139,7 @@ class client {
       // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {
 
-         // console.log(await this.database.get()); // remove
+         console.log(await this.database.get()); // remove
 
       });
       this.client.on('guildMemberAdd', async (member) => {
@@ -176,7 +176,7 @@ class client {
 
       );
 
-      // this.listen();
+      this.listen();
 
    }
 

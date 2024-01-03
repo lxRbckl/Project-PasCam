@@ -25,19 +25,17 @@ class database {
 
       var users = {};
       const channel = await this.client.channels.fetch(this.channelId);
-      const messages = await channel.messages.fetch({limit : this.maxMembers})
+      const messages = await channel.messages.fetch({limit : this.maxMembers});
       for (const m of messages.values()) {
 
          // try (if ) <
          // except (then ) <
          try {
 
-            const tag = m.embeds[0].title;
-            const key = JSON.parse((m.embeds[0].description).slice(3, -3));
+            users[(m.embeds[0].title).slice(1, -1)] = {
 
-            users[tag] = {
-
-
+               'icon' : (m.embeds[0].thumbnail.url),
+               'key' : (m.embeds[0].description).slice(1, -1)
 
             };
 

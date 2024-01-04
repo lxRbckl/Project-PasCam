@@ -6,6 +6,7 @@
 
 class show {
 
+   // we will iterate through user's directory and return alphabetical value
    constructor() {
 
 

@@ -1,4 +1,5 @@
 // import <
+const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
 
 // >
@@ -6,8 +7,11 @@ const decrypt = require('./decrypt.js');
 
 class remove {
 
+   // we're going to need to decrypt file to see if it's shared
+   // if it's shared, then we'll need encrypt to update owner's file
    constructor() {
 
+      this.encrypt = new encrypt();
       this.decrypt = new decrypt();
 
    }

@@ -42,8 +42,8 @@ class encrypt {
             {
 
                type : 3,
-               name : 'info',
                required : true,
+               name : 'content',
                description : 'description'
 
             }
@@ -64,15 +64,17 @@ class encrypt {
 
    }) {
 
-      // setup <
-      // encrypt <
-      const cipher = createCipheriv(
+      console.log(pTag, pFile, pUsers, pContent); // remove
 
-         this.algorithm,
-         pUsers[pTag]['key'],
-         randomBytes(this.ivSize)
+      // // setup <
+      // // encrypt <
+      // const cipher = createCipheriv(
 
-      );
+      //    this.algorithm,
+      //    pUsers[pTag]['key'],
+      //    randomBytes(this.ivSize)
+
+      // );
 
 
       // const encrypted = Buffer.concat([

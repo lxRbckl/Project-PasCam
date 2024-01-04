@@ -139,7 +139,15 @@ class client {
       // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {
 
-         console.log(await this.database.get()); // remove
+         await this.commands[interaction.commandName].run({
+
+            pTag : interaction.user.tag,
+            pUsers : await this.database.get(),
+            pFile : interaction.options.get('file')?.value,
+            pAction : interaction.options.get('action')?.value,
+            pContent : interaction.options.get('content')?.value
+
+         });
 
       });
       this.client.on('guildMemberAdd', async (member) => {
@@ -152,7 +160,7 @@ class client {
             pIcon : member.user.displayAvatarURL(),
             pChannel : this.client.channels.cache.get(this.channelId)
 
-         })
+         });
 
       });
 

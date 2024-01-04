@@ -26,7 +26,7 @@ class show {
    }
 
 
-   async run() {
+   async run({}) {
 
 
 

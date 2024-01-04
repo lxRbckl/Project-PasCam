@@ -71,7 +71,7 @@ class share {
    }
 
 
-   async run() {
+   async run({}) {
 
 
 

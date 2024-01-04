@@ -38,7 +38,7 @@ class remove {
    }
 
 
-   async run() {
+   async run({}) {
 
 
 

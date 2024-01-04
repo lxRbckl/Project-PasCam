@@ -40,15 +40,15 @@ class decrypt extends encrypt {
    }
 
 
-   async run(
+   async run({
 
       pTag,
       pFile,
       pUsers
 
-   ) {
+   }) {
 
-      
+      console.log(pTag, pFile, pUsers); // remove
       
    }
 

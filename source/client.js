@@ -11,6 +11,7 @@ const {
 const database = require('./database.js');
 const show = require('./command/show.js');
 const share = require('./command/share.js');
+const update = require('./command/update.js');
 const remove = require('./command/remove.js');
 const decrypt = require('./command/decrypt.js');
 const encrypt = require('./command/encrypt.js');
@@ -66,6 +67,7 @@ class client {
          'encrypt' : new encrypt(),
          'decrypt' : new decrypt(),
          'remove' : new remove(),
+         'update' : new update(),
          'share' : new share(),
          'show' : new show()
 
@@ -137,17 +139,17 @@ class client {
 
       // event (new input) <
       // event (new member) <
-      this.client.on('interactionCreate', async (interaction) => {
+      this.client.on('interactionCreate', async (interaction) => {  
+            
+         //    await this.commands[interaction.commandName].run({
 
-         await this.commands[interaction.commandName].run({
+         //    pTag : interaction.user.tag,
+         //    pUsers : await this.database.get(),
+         //    pFile : interaction.options.get('file')?.value,
+         //    pAction : interaction.options.get('action')?.value,
+         //    pContent : interaction.options.get('content')?.value
 
-            pTag : interaction.user.tag,
-            pUsers : await this.database.get(),
-            pFile : interaction.options.get('file')?.value,
-            pAction : interaction.options.get('action')?.value,
-            pContent : interaction.options.get('content')?.value
-
-         });
+         // });
 
       });
       this.client.on('guildMemberAdd', async (member) => {

@@ -66,6 +66,16 @@ class encrypt {
 
       console.log(pTag, pFile, pUsers, pContent); // remove
 
+      // setup <
+      const cipher = createCipheriv(
+
+         this.algorithm,
+         
+
+      )
+
+      // >
+
       // // setup <
       // // encrypt <
       // const cipher = createCipheriv(

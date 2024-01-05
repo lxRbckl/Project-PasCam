@@ -1,6 +1,7 @@
 // import <
 const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
+const database = require('../database.js');
 
 // >
 
@@ -14,6 +15,7 @@ class share {
 
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
+      this.database = new database();
 
    }
 
@@ -66,6 +68,32 @@ class share {
                required : true,
                description : 'description'
                // add list of users to choose from
+               
+
+            },
+            {
+
+               type : 3,
+               name : 'notify',
+               default : 'yes',
+               required : true,
+               description : 'description',
+               choices : [
+
+                  {
+
+                     name : 'no',
+                     value : 'no'
+
+                  },
+                  {
+
+                     name : 'yes',
+                     value : 'yes'
+
+                  }
+
+               ]
 
             }
 

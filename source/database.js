@@ -63,16 +63,16 @@ class database {
 
    async setUser(pId) {
 
-      const inUsers = 1;
       const inDirectory = await this.isFile({pTag : '', pFile : pId});
+      const inUsers = (((Object.values(this.getUsers)).indexOf(pId)) != -1);
 
       // if (new member) <
-      // if (!(await this.isFile({pTag : '', pFile : pId}))) {
+      if (!inDirectory && !inUsers) {
 
-      //    await dirSet({pDir : `${this.dataFilepath}/${pId}`});
-      //    return true;
+         await dirSet({pDir : `${this.dataFilepath}/${pId}`});
+         return true;
 
-      // }
+      }
 
       // >
 

@@ -164,7 +164,7 @@ class client {
                pKind : 'member',
                pContent : member.user.id,
                pTitle : member.user.username,
-               pIcon : member.user.displayAvatarURL(),
+               pThumbnail : member.user.displayAvatarURL(),
                pChannel : this.client.channels.cache.get(this.channelId)
 
             });

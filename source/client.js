@@ -27,7 +27,8 @@ class client {
       pGuildId,
       pChannelId,
       pMaxMembers,
-      pApplicationId,
+      pDataFilepath,
+      pApplicationId
 
    }) {
 
@@ -36,6 +37,7 @@ class client {
       this.guildId = pGuildId;
       this.channelId = pChannelId;
       this.maxMembers = pMaxMembers;
+      this.dataFilepath = pDataFilepath;
       this.applicationId = pApplicationId;
 
       this.client = new Client({
@@ -53,9 +55,10 @@ class client {
       });
       this.database = new database({
 
-         'pClient' : this.client,
-         'pChannelId' : this.channelId,
-         'pMaxMembers' : this.maxMembers
+         pClient : this.client,
+         pChannelId : this.channelId,
+         pMaxMembers : this.maxMembers,
+         pDataFilepath : this.dataFilepath
          
       });
 
@@ -84,29 +87,11 @@ class client {
       pTitle,
       pContent,
 
-      pIcon = undefined,
       pChannel = undefined,
+      pThumbnail = undefined,
       pInteraction = undefined
 
    }) {
-
-      const embed = {
-
-         title : `\`${pTitle}\``,
-         thumbnail : {url : pIcon},
-         description : `\`${pContent}\``,
-         footer : {
-
-            text : {
-
-               'interaction' : 'No one else can see this message.',
-               'member' : 'Do not alter or manipulate this message.'
-
-            }[pKind]
-
-         }
-
-      };
       
       return {
 
@@ -114,7 +99,13 @@ class client {
 
             await pChannel.send({
 
-               embeds : [embed]
+               embeds : [{
+
+                  title : `\`${pTitle}\``,
+                  thumbnail : {url : pThumbnail},
+                  description : `\`${pContent}\``
+
+               }]
 
             });
 
@@ -123,8 +114,13 @@ class client {
 
             await pInteraction.reply({
 
-               embeds : [embed],
-               ephemeral : true
+               ephemeral : true,
+               embeds : [{
+
+                  title : `\`${pTitle}\``,
+                  description : `\`${pContent}\``
+
+               }]
 
             });
 
@@ -139,30 +135,43 @@ class client {
 
       // event (new input) <
       // event (new member) <
-      this.client.on('interactionCreate', async (interaction) => {  
-            
-         //    await this.commands[interaction.commandName].run({
+      // this.client.on('interactionCreate', async (interaction) => {  
 
-         //    pTag : interaction.user.tag,
-         //    pUsers : await this.database.get(),
-         //    pFile : interaction.options.get('file')?.value,
-         //    pAction : interaction.options.get('action')?.value,
-         //    pContent : interaction.options.get('content')?.value
+      //    await this.message({
 
-         // });
+      //       pKind : 'interaction',
+      //       pTitle : interaction.commandName,
+      //       pContent : await this.commands[interaction.commandName].run({
 
-      });
+      //          oDatabase : this.database,
+      //          pTag : interaction.user.tag,
+      //          pFile : interaction.options.get('file')?.value,
+      //          pAction : interaction.options.get('action')?.value,
+      //          pContent : interaction.options.get('content')?.value
+
+      //       })
+
+      //    });
+      
+      // });
       this.client.on('guildMemberAdd', async (member) => {
 
-         await this.message({
+         // if (new member) <
+         if (await this.database.setUser(member.user.id)) {
 
-            pKind : 'member',
-            pContent : member.user.id,
-            pTitle : member.user.username,
-            pIcon : member.user.displayAvatarURL(),
-            pChannel : this.client.channels.cache.get(this.channelId)
+            await this.message({
 
-         });
+               pKind : 'member',
+               pContent : member.user.id,
+               pTitle : member.user.username,
+               pIcon : member.user.displayAvatarURL(),
+               pChannel : this.client.channels.cache.get(this.channelId)
+
+            });
+
+         }
+
+         // >
 
       });
 
@@ -187,7 +196,7 @@ class client {
       );
 
       this.listen();
-
+      
    }
 
 }

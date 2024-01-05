@@ -57,50 +57,45 @@ class encrypt {
 
    async run({
 
+      pId,
       pTag,
       pFile,
-      pUsers,
-      pContent
+      pContent,
+      oDatabase
 
    }) {
 
-      console.log(pTag, pFile, pUsers, pContent); // remove
-
       // setup <
+      const key = pUsers[pTag]['key'];
+      const iv = randomBytes(this.ivSize);
+
       const cipher = createCipheriv(
 
          this.algorithm,
-         
+         key,
+         iv
 
-      )
-
-      // >
-
-      // // setup <
-      // // encrypt <
-      // const cipher = createCipheriv(
-
-      //    this.algorithm,
-      //    pUsers[pTag]['key'],
-      //    randomBytes(this.ivSize)
-
-      // );
-
-
-      // const encrypted = Buffer.concat([
-
-      //    cipher.update(
-          
-      //       pContent,
-      //       this.inputEncoding,
-      //       this.outputEncoding
-            
-      //    ),
-      //    cipher.final()
-
-      // ]);
+      );
 
       // >
+
+      return {
+
+         'iv' : iv,
+         'encrypted' : Buffer.concat([
+
+            cipher.update(
+
+               pContent,
+               this.inputEncoding,
+               this.outputEncoding
+               
+            ),
+            cipher.final()
+
+         ])
+
+      };
 
    }
 

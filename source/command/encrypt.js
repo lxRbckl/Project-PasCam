@@ -1,5 +1,4 @@
 // import <
-const {fileSet} = require('lxrbckl');
 const {
 
    randomBytes,
@@ -14,11 +13,11 @@ class encrypt {
 
    constructor() {
 
-      this.ivSize = 16,
-      this.keySize = 16,
-      this.outputEncoding = 'hex',
-      this.inputEncoding = 'utf-8',
-      this.algorithm = 'aes-256-cbc'
+      this.ivSize = 16;
+      this.keySize = 16;
+      this.outputEncoding = 'hex';
+      this.inputEncoding = 'utf-8';
+      this.algorithm = 'aes-256-cbc';
 
    }
 
@@ -82,7 +81,7 @@ class encrypt {
       return {
 
          'iv' : iv,
-         'encrypted' : cipher.update(
+         'content' : cipher.update(
 
             pContent,
             this.inputEncoding,
@@ -104,11 +103,13 @@ class encrypt {
 
    }) {
 
-      if (!(oDatabase.isFile({pTag : pTag, pFile : pFile}))) {
+      // if (new file) <
+      if (!(await oDatabase.isFile({pTag : pTag, pFile : pFile}))) {
 
-         await fileSet({
+         await oDatabase.setFile({
 
-            pFile : `${oDatabase.dataFilepath}/${pTag}/${pFile}.json`,
+            pTag : pTag,
+            pFile : pFile,
             pData : await this.core({
 
                pTag : pTag,
@@ -119,10 +120,11 @@ class encrypt {
 
          });
 
-         console.log('encrypted successfully'); // remove
          return true;
 
       }
+
+      // >
 
    }
 

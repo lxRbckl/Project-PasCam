@@ -27,9 +27,15 @@ class show {
    }
 
 
-   async run({}) {
+   async run({
 
+      pTag,
+      oDatabase
 
+   }) {
+
+      const files = await oDatabase.getFiles(pTag);
+      return files.map((i) => {return i.slice(0, -5);}).join('\n');
 
    }
 

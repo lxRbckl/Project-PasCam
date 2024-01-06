@@ -72,6 +72,43 @@ class database {
    }
 
 
+   async getFiles(pTag) {
+
+      return await dirGet({pDir : `${this.dataFilepath}/${pTag}`})
+
+   }
+
+
+   async getFile({
+
+      pTag,
+      pFile
+
+   }) {
+
+      return await fileGet({pFile : `${this.dataFilepath}/${pTag}/${pFile}`});
+
+   }
+
+
+   async setFile({
+
+      pTag,
+      pFile,
+      pData
+
+   }) {
+
+      await fileSet({
+
+         pData : pData,
+         pFile : `${this.dataFilepath}/${pTag}/${pFile}`
+
+      });
+
+   }
+
+
    async isFile({
 
       pTag,
@@ -82,12 +119,7 @@ class database {
       const dir = await dirGet({pDir : `${this.dataFilepath}/${pTag}`});
       const location = dir.indexOf(pFile);
 
-      // if (DNE) <
-      // else (then exists) <
-      if (location == -1) {return false;}
-      else {return true;}
-
-      // >
+      return location != -1;
 
    }
 

@@ -141,14 +141,15 @@ class client {
          await this.message({
 
             pKind : 'interaction',
+            pInteraction : interaction,
             pTitle : interaction.commandName,
             pDescription : await this.commands[interaction.commandName].run({
 
                oDatabase : this.database,
                pTag : interaction.user.tag,
-               pFile : interaction.options.get('file')?.value,
                pAction : interaction.options.get('action')?.value,
-               pContent : interaction.options.get('content')?.value
+               pContent : interaction.options.get('content')?.value,
+               pFile : `${interaction.options.get('file')?.value}.json`
 
             })
 

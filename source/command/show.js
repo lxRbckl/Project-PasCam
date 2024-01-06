@@ -6,12 +6,7 @@
 
 class show {
 
-   // we will iterate through user's directory and return alphabetical value
-   constructor() {
-
-
-
-   }
+   constructor() {}
 
 
    context() {
@@ -34,8 +29,15 @@ class show {
 
    }) {
 
-      const files = await oDatabase.getFiles(pTag);
-      return files.map((i) => {return i.slice(0, -5);}).join('\n');
+      // if (user in database) <
+      if (await oDatabase.isFile({pTag : '', pFile : pTag})) {
+
+         const files = await oDatabase.getFiles(pTag);
+         return files.map((i) => {return i.slice(0, -5);}).join('\n');   
+
+      }
+
+      // >
 
    }
 

@@ -138,6 +138,8 @@ class client {
       // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {  
 
+         // add authentication //
+         // needs to break down incoming messages //
          await this.message({
 
             pKind : 'interaction',

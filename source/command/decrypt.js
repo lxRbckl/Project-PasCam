@@ -63,13 +63,13 @@ class decrypt extends encrypt {
 
       // >
 
-      return decipher.update(
+      return JSON.parse(decipher.update(
 
          content,
          this.outputEncoding,
          this.inputEncoding
 
-      ) + decipher.final(super.inputEncoding);
+      ) + decipher.final(super.inputEncoding));
 
    }
 
@@ -111,20 +111,3 @@ class decrypt extends encrypt {
 module.exports = decrypt
 
 // >
-
-
-
-// const decipher = createDecipheriv(
-
-//    this.algorithm,
-//    Buffer.from(users[pTag]['key']),
-//    encr['iv']
-
-// );
-// let decr = decipher.update(
-
-//    encr['encrypted'],
-//    this.outputEncoding,
-//    this.inputEncoding
-
-// ) + decipher.final(this.inputEncoding);

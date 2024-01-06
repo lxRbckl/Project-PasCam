@@ -1,15 +1,17 @@
 // import <
 const encrypt = require('./encrypt.js');
+const decrypt = require('./decrypt.js');
 
 // >
 
 
-class update extends encrypt {
+class update {
 
    constructor() {
 
-      super();
-
+      this.oEncrypt = new encrypt();
+      this.oDecrypt = new decrypt();
+      
    }
 
 
@@ -46,9 +48,50 @@ class update extends encrypt {
    }
 
 
-   run() {
+   async run({
 
+      pTag,
+      pFile,
+      pContent,
+      oDatabase
 
+   }) {
+
+      // if (existing file) <
+      if (await oDatabase.isFile({pTag : pTag, pFile : pFile})) {
+
+         const decrypted = await this.oDecrypt.core({
+
+            pTag : pTag,
+            pUsers : await oDatabase.getUsers(),
+            pEncrypted : await oDatabase.getFile({
+
+               pTag : pTag,
+               pFile : pFile
+
+            })
+
+         });
+
+         await this.oEncrypt.core({
+
+            pTag : pTag,
+            pUsers : await oDatabase.getUsers(),
+            pContent : {
+
+               'owner' : pTag,
+               'content' : pContent,
+               'share' : decrypted['share']
+
+            }
+
+         });
+
+         return true;
+
+      }
+
+      // >
       
    }
 

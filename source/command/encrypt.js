@@ -66,6 +66,7 @@ class encrypt {
 
       // setup <
       const iv = randomBytes(this.ivSize);
+      const content = JSON.stringify(pContent);
       const key = Buffer.from(pUsers[pTag]['key']);
 
       const cipher = createCipheriv(
@@ -83,7 +84,7 @@ class encrypt {
          'iv' : iv,
          'content' : cipher.update(
 
-            pContent,
+            content,
             this.inputEncoding,
             this.outputEncoding
 
@@ -113,8 +114,14 @@ class encrypt {
             pData : await this.core({
 
                pTag : pTag,
-               pContent : pContent,
-               pUsers : await oDatabase.getUsers()
+               pUsers : await oDatabase.getUsers(),
+               pContent : {
+
+                  'share' : [],
+                  'owner' : pTag,
+                  'content' : pContent
+
+               }
 
             })
 

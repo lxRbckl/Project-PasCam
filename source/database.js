@@ -109,6 +109,18 @@ class database {
    }
 
 
+   async delFile({
+
+      pTag,
+      pFile
+
+   }) {
+
+      await fileDel({pFile : `${this.dataFilepath}/${pTag}/${pFile}`})
+
+   }
+
+
    async isFile({
 
       pTag,

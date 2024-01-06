@@ -127,7 +127,7 @@ class encrypt {
 
          });
 
-         return true;
+         return `${pFile.slice(0, -5)} was added successfully.`;
 
       }
 

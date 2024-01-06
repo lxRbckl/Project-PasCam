@@ -8,11 +8,7 @@ const {createDecipheriv} = require('crypto');
 
 class decrypt extends encrypt {
 
-   constructor() {
-
-      super();
-      
-   }
+   constructor() {super();}
 
 
    context() {

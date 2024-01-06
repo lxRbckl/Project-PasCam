@@ -42,9 +42,29 @@ class remove {
    }
 
 
-   async run({}) {
+   async run({
 
+      pTag,
+      pFile,
+      oDatabase
 
+   }) {
+
+      // if (file exists) <
+      if (await oDatabase.isFile({pTag : pTag, pFile : pFile})) {
+
+         await oDatabase.delFile({
+
+            pTag : pTag,
+            pFile : pFile
+
+         });
+
+         return `${pFile.slice(0, -5)} was removed successfully.`;
+
+      }
+
+      // >
 
    }
 

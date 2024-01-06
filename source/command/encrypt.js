@@ -1,4 +1,5 @@
 // import <
+const {fileSet} = require('lxrbckl');
 const {
 
    randomBytes,
@@ -14,7 +15,7 @@ class encrypt {
    constructor() {
 
       this.ivSize = 16,
-      this.keySize = 32,
+      this.keySize = 16,
       this.outputEncoding = 'hex',
       this.inputEncoding = 'utf-8',
       this.algorithm = 'aes-256-cbc'
@@ -55,19 +56,18 @@ class encrypt {
    }
 
 
-   async run({
+   async core({
 
-      pId,
       pTag,
-      pFile,
-      pContent,
-      oDatabase
+      pUsers,
+      pContent
 
    }) {
 
+
       // setup <
-      const key = pUsers[pTag]['key'];
       const iv = randomBytes(this.ivSize);
+      const key = Buffer.from(pUsers[pTag]['key']);
 
       const cipher = createCipheriv(
 
@@ -82,20 +82,47 @@ class encrypt {
       return {
 
          'iv' : iv,
-         'encrypted' : Buffer.concat([
+         'encrypted' : cipher.update(
 
-            cipher.update(
+            pContent,
+            this.inputEncoding,
+            this.outputEncoding
 
-               pContent,
-               this.inputEncoding,
-               this.outputEncoding
-               
-            ),
-            cipher.final()
-
-         ])
+         ) + cipher.final(this.outputEncoding)
 
       };
+
+   }
+
+
+   async run({
+
+      pTag,
+      pFile,
+      pContent,
+      oDatabase
+
+   }) {
+
+      if (!(oDatabase.isFile({pTag : pTag, pFile : pFile}))) {
+
+         await fileSet({
+
+            pFile : `${oDatabase.dataFilepath}/${pTag}/${pFile}.json`,
+            pData : await this.core({
+
+               pTag : pTag,
+               pContent : pContent,
+               pUsers : await oDatabase.getUsers()
+
+            })
+
+         });
+
+         console.log('encrypted successfully'); // remove
+         return true;
+
+      }
 
    }
 
@@ -106,58 +133,3 @@ class encrypt {
 module.exports = encrypt;
 
 // >
-
-
-
-
-// async function encrypt(input) {
-
-//    const iv = randomBytes(ivSize);
-//    const filePath = `${input.tag}/${input.file}`;
-
-//    // cipher (info) <
-//    const cipher = createCipheriv(
-
-//        algorithm,
-//        Buffer.from(input.users[input.tag]['key']),
-//        iv
-
-//    );
-//    let encr = cipher.update(
-
-//        input.info,
-//        inputEncoding,
-//        outputEncoding
-
-//    ) + cipher.final(outputEncoding);
-
-//    // >
-
-//    await setFile({
-
-//        file : `${dataPath}/${filePath}`,
-//        data : {
-
-//            encr : encr,
-//            iv : JSON.stringify(Array.from(iv))
-
-//        }
-
-//    });
-
-//    return {
-
-//        'encrypt' : () => {
-
-//            input.users[input.tag]['update'] = true;
-//            input.users[input.tag]['files'][input.file] = [input.tag];
-
-//            return {'body' : `Your information **${input.file}** was encrypted.`};
-
-//        },
-//        'update' : () => {return {'body' : `Your information **${input.file}** was updated.`};}
-
-//    }[input.command]();
-
-
-// }

@@ -39,20 +39,13 @@ class database {
       const messages = await channel.messages.fetch({limit : this.maxMembers});
       for (const m of messages.values()) {
 
-         // try (if valid message) <
-         // except (then broken message) <
-         try {
+         users[(m.embeds[0].title).slice(1, -1)] = {
 
-            users[(m.embeds[0].description).slice(1, -1)] = {
+            'icon' : (m.embeds[0]).thumbnail.url,
+            'id' : (m.embeds[0].description).slice(1, -1).split('\n')[0],
+            'key' : (m.embeds[0].description).slice(1, -1).split('\n')[1]
 
-               'icon' : (m.embeds[0].thumbnail.url),
-               'key' : (m.embeds[0].title).slice(1, -1)
-
-            };
-
-         } catch (error) {console.log(error);}
-
-         // >
+         };
 
       }
 
@@ -61,15 +54,15 @@ class database {
    }
 
 
-   async setUser(pId) {
+   async setUser(pTag) {
 
-      const inDirectory = await this.isFile({pTag : '', pFile : pId});
-      const inUsers = (((Object.values(this.getUsers)).indexOf(pId)) != -1);
+      const inDirectory = await this.isFile({pTag : '', pFile : pTag});
+      const inUsers = (((Object.values(this.getUsers)).indexOf(pTag)) != -1);
 
       // if (new member) <
       if (!inDirectory && !inUsers) {
 
-         await dirSet({pDir : `${this.dataFilepath}/${pId}`});
+         await dirSet({pDir : `${this.dataFilepath}/${pTag}`});
          return true;
 
       }

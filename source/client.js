@@ -85,7 +85,7 @@ class client {
 
       pKind,
       pTitle,
-      pContent,
+      pDescription,
 
       pChannel = undefined,
       pThumbnail = undefined,
@@ -103,7 +103,7 @@ class client {
 
                   title : `\`${pTitle}\``,
                   thumbnail : {url : pThumbnail},
-                  description : `\`${pContent}\``
+                  description : `\`${pDescription}\``
 
                }]
 
@@ -112,13 +112,14 @@ class client {
          },
          'interaction' : async () => {
 
+            // add authenticator utility //
             await pInteraction.reply({
 
                ephemeral : true,
                embeds : [{
 
                   title : `\`${pTitle}\``,
-                  description : `\`${pContent}\``
+                  description : `\`${pDescription}\``
 
                }]
 
@@ -135,37 +136,42 @@ class client {
 
       // event (new input) <
       // event (new member) <
-      // this.client.on('interactionCreate', async (interaction) => {  
+      this.client.on('interactionCreate', async (interaction) => {  
 
-      //    await this.message({
+         await this.message({
 
-      //       pKind : 'interaction',
-      //       pTitle : interaction.commandName,
-      //       pContent : await this.commands[interaction.commandName].run({
+            pKind : 'interaction',
+            pTitle : interaction.commandName,
+            pDescription : await this.commands[interaction.commandName].run({
 
-      //          oDatabase : this.database,
-      //          pTag : interaction.user.tag,
-      //          pFile : interaction.options.get('file')?.value,
-      //          pAction : interaction.options.get('action')?.value,
-      //          pContent : interaction.options.get('content')?.value
+               oDatabase : this.database,
+               pTag : interaction.user.tag,
+               pFile : interaction.options.get('file')?.value,
+               pAction : interaction.options.get('action')?.value,
+               pContent : interaction.options.get('content')?.value
 
-      //       })
+            })
 
-      //    });
-      
-      // });
+         });
+               
+      });
       this.client.on('guildMemberAdd', async (member) => {
 
          // if (new member) <
-         if (await this.database.setUser(member.user.id)) {
+         if (await this.database.setUser(member.user.tag)) {
 
             await this.message({
 
                pKind : 'member',
-               pContent : member.user.id,
-               pTitle : member.user.username,
+               pTitle : member.user.tag,
                pThumbnail : member.user.displayAvatarURL(),
-               pChannel : this.client.channels.cache.get(this.channelId)
+               pChannel : await this.client.channels.cache.get(this.channelId),
+               pDescription : [
+
+                  member.user.id,
+                  randomBytes(this.commands['encrypt'].keySize).toString('hex')
+
+               ].join('\n')
 
             });
 

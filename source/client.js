@@ -139,24 +139,34 @@ class client {
       // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {
 
-         const result = await this.commands[interaction.commandName].run({
+         const interactionId = interaction.user.id;
+         const user = await this.database.getUsers();
 
-            pTag : interaction.user.tag,
-            pAction : interaction.options.get('action')?.value,
-            pContent : interaction.options.get('content')?.value,
-            pFile : `${interaction.options.get('file')?.value}.json`
+         // if (authentic) <
+         if (interactionId == user[interaction.user.tag]['id']) {
 
-         });
+            const result = await this.commands[interaction.commandName].run({
 
-         await this.message({
+               pTag : interaction.user.tag,
+               pAction : interaction.options.get('action')?.value,
+               pContent : interaction.options.get('content')?.value,
+               pFile : `${interaction.options.get('file')?.value}.json`
 
-            pKind : 'interaction',
-            pInteraction : interaction,
-            pFooterText : result['footer'],
-            pDescription : result['content'],
-            pTitle : interaction.commandName
+            });
 
-         });
+            await this.message({
+
+               pKind : 'interaction',
+               pInteraction : interaction,
+               pFooterText : result['footer'],
+               pDescription : result['content'],
+               pTitle : interaction.commandName
+
+            });
+         
+         }
+
+         // >   
                
       });
       this.client.on('guildMemberAdd', async (member) => {

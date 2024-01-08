@@ -7,10 +7,9 @@ const decrypt = require('./decrypt.js');
 
 class remove {
 
-   // we're going to need to decrypt file to see if it's shared
-   // if it's shared, then we'll need encrypt to update owner's file
-   constructor() {
+   constructor(pDatabase) {
 
+      this.database = pDatabase;
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
 
@@ -45,20 +44,31 @@ class remove {
    async run({
 
       pTag,
-      pFile,
-      oDatabase
+      pFile
 
    }) {
 
       // if (file exists) <
-      if (await oDatabase.isFile({pTag : pTag, pFile : pFile})) {
+      if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
 
-         await oDatabase.delFile({
+         const result = await this.decrypt.core({
 
             pTag : pTag,
-            pFile : pFile
+            pUsers : this.database.getUsers(),
+            pEncrypted : await this.database.getFile({
 
-         });
+
+
+            })
+
+         })
+
+         // await this.database.delFile({
+
+         //    pTag : pTag,
+         //    pFile : pFile
+
+         // });
 
          return `${pFile.slice(0, -5)} was removed successfully.`;
 
@@ -75,32 +85,3 @@ class remove {
 module.exports = remove;
 
 // >
-
-
-
-
-
-
-
-
-
-
-// async function remove(input) {
-
-//    const filePath = `${input.tag}/${input.file}`;
-//    const [owner, ...share] = input.users[input.tag]['files'][input.file];
-
-//    // if (is owner) <
-//    if (owner.includes(input.tag)) {
-
-//        input.users[input.tag]['update'] = true;
-//        await delFile({file : `${dataPath}/${filePath}`});
-//        delete input.users[input.tag]['files'][input.file];
-
-//        return {'body' : `The file **${input.file}** was removed.`}
-
-//    }
-
-//    // >
-
-// }

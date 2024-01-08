@@ -1,19 +1,10 @@
 // import <
-const {
-
-   dirDel,
-   dirGet,
-   dirSet,
-   fileDel,
-   fileGet,
-   fileSet
-
-} = require('lxrbckl');
+const {local} = require('lxrbckl')
 
 // >
 
 
-class database {
+class database extends local {
 
    constructor({
 
@@ -24,10 +15,29 @@ class database {
 
    }) {
 
+      super();
       this.client = pClient;
       this.channelId = pChannelId;
       this.maxMembers = pMaxMembers;
-      this.dataFilepath = pDataFilepath;
+      this.referencePath = pDataFilepath;
+
+   }
+
+
+   async setUser(pTag) {
+
+      const inDirectory = await this.exists({pDir : '', pName : pTag});
+      const inUsers = (((Object.values(this.getUsers)).indexOf(pTag)) != -1);
+
+      // if (new member) <
+      if (!inDirectory && !inUsers) {
+
+         await dirSet({pDir : `${this.referencePath}/${pTag}`});
+         return true;
+
+      }
+
+      // >
 
    }
 
@@ -50,88 +60,6 @@ class database {
       }
 
       return users;
-
-   }
-
-
-   async setUser(pTag) {
-
-      const inDirectory = await this.isFile({pTag : '', pFile : pTag});
-      const inUsers = (((Object.values(this.getUsers)).indexOf(pTag)) != -1);
-
-      // if (new member) <
-      if (!inDirectory && !inUsers) {
-
-         await dirSet({pDir : `${this.dataFilepath}/${pTag}`});
-         return true;
-
-      }
-
-      // >
-
-   }
-
-
-   async getFiles(pTag) {
-
-      return await dirGet({pDir : `${this.dataFilepath}/${pTag}`})
-
-   }
-
-
-   async getFile({
-
-      pTag,
-      pFile
-
-   }) {
-
-      return await fileGet({pFile : `${this.dataFilepath}/${pTag}/${pFile}`});
-
-   }
-
-
-   async setFile({
-
-      pTag,
-      pFile,
-      pData
-
-   }) {
-
-      await fileSet({
-
-         pData : pData,
-         pFile : `${this.dataFilepath}/${pTag}/${pFile}`
-
-      });
-
-   }
-
-
-   async delFile({
-
-      pTag,
-      pFile
-
-   }) {
-
-      await fileDel({pFile : `${this.dataFilepath}/${pTag}/${pFile}`})
-
-   }
-
-
-   async isFile({
-
-      pTag,
-      pFile
-
-   }) {
-
-      const dir = await dirGet({pDir : `${this.dataFilepath}/${pTag}`});
-      const location = dir.indexOf(pFile);
-
-      return location != -1;
 
    }
 

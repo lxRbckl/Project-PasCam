@@ -8,7 +8,12 @@ const {createDecipheriv} = require('crypto');
 
 class decrypt extends encrypt {
 
-   constructor() {super();}
+   constructor(pDatabase) {
+      
+      super(pDatabase);
+      this.database = pDatabase;
+   
+   }
 
 
    context() {
@@ -73,26 +78,33 @@ class decrypt extends encrypt {
    async run({
 
       pTag,
-      pFile,
-      oDatabase
+      pFile
 
    }) {
 
       // if (existing file) <
-      if (await oDatabase.isFile({pTag : pTag, pFile : pFile})) {
+      if (await this.database.exists({pDir : pTag, pName : pFile})) {
 
-         return await this.core({
+         const result = await this.core({
 
             pTag : pTag,
-            pUsers : await oDatabase.getUsers(),
-            pEncrypted : await oDatabase.getFile({
-
-               pTag : pTag,
-               pFile : pFile
-
-            })
+            pUsers : await this.database.getUsers(),
+            pEncrypted : await this.database.getFile({pFile : `${pTag}/${pFile}`})            
 
          });
+
+         return {
+
+            owner : result['owner'],
+            content : result['content'],
+            footer : {
+
+               false : `Shared by ${result['owner']}`,
+               true : `Shared with ${result['share'].join(' • ')}`
+
+            }[pTag == result['owner']]
+
+         };
       
       }
 

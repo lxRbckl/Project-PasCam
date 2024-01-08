@@ -11,10 +11,11 @@ const {
 
 class encrypt {
 
-   constructor() {
+   constructor(pDatabase) {
 
       this.ivSize = 16;
       this.keySize = 16;
+      this.database = pDatabase;
       this.outputEncoding = 'hex';
       this.inputEncoding = 'utf-8';
       this.algorithm = 'aes-256-cbc';
@@ -99,22 +100,21 @@ class encrypt {
 
       pTag,
       pFile,
-      pContent,
-      oDatabase
+      pContent
 
    }) {
 
       // if (new file) <
-      if (!(await oDatabase.isFile({pTag : pTag, pFile : pFile}))) {
+      if (!(await this.database.exists({pDir : pTag, pName : pFile}))) {
 
-         await oDatabase.setFile({
+         await this.database.setFile({
 
             pTag : pTag,
             pFile : pFile,
             pData : await this.core({
 
                pTag : pTag,
-               pUsers : await oDatabase.getUsers(),
+               pUsers : await this.database.getUsers(),
                pContent : {
 
                   'share' : [],

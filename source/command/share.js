@@ -10,8 +10,9 @@ class share {
    // when we are available to share
    // add the file to receiver, and fix content to signify that it's a shared file
    // then from the owner's file, add user's name to recipients list
-   constructor() {
+   constructor(pDatabase) {
 
+      this.database = pDatabase;
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
 

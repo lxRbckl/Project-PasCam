@@ -67,12 +67,12 @@ class client {
       // commands <
       this.commands = {
 
-         'encrypt' : new encrypt(),
-         'decrypt' : new decrypt(),
-         'remove' : new remove(),
-         'update' : new update(),
-         'share' : new share(),
-         'show' : new show()
+         'encrypt' : new encrypt(this.database),
+         'decrypt' : new decrypt(this.database),
+         'remove' : new remove(this.database),
+         'update' : new update(this.database),
+         'share' : new share(this.database),
+         'show' : new show(this.database)
 
       };
 
@@ -89,6 +89,7 @@ class client {
 
       pChannel = undefined,
       pThumbnail = undefined,
+      pFooterText = undefined,
       pInteraction = undefined
 
    }) {
@@ -112,14 +113,14 @@ class client {
          },
          'interaction' : async () => {
 
-            // add authenticator utility //
             await pInteraction.reply({
 
                ephemeral : true,
                embeds : [{
 
-                  title : `\`${pTitle}\``,
-                  description : `\`${pDescription}\``
+                  title : pTitle,
+                  description : pDescription,
+                  footer : {text : pFooterText}
 
                }]
 
@@ -136,24 +137,24 @@ class client {
 
       // event (new input) <
       // event (new member) <
-      this.client.on('interactionCreate', async (interaction) => {  
+      this.client.on('interactionCreate', async (interaction) => {
 
-         // add authentication //
-         // needs to break down incoming messages //
+         const result = await this.commands[interaction.commandName].run({
+
+            pTag : interaction.user.tag,
+            pAction : interaction.options.get('action')?.value,
+            pContent : interaction.options.get('content')?.value,
+            pFile : `${interaction.options.get('file')?.value}.json`
+
+         });
+
          await this.message({
 
             pKind : 'interaction',
             pInteraction : interaction,
-            pTitle : interaction.commandName,
-            pDescription : await this.commands[interaction.commandName].run({
-
-               oDatabase : this.database,
-               pTag : interaction.user.tag,
-               pAction : interaction.options.get('action')?.value,
-               pContent : interaction.options.get('content')?.value,
-               pFile : `${interaction.options.get('file')?.value}.json`
-
-            })
+            pFooterText : result['footer'],
+            pDescription : result['content'],
+            pTitle : interaction.commandName
 
          });
                

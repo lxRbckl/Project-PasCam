@@ -7,8 +7,9 @@ const decrypt = require('./decrypt.js');
 
 class update {
 
-   constructor() {
+   constructor(pDatabase) {
 
+      this.database = pDatabase;
       this.oEncrypt = new encrypt();
       this.oDecrypt = new decrypt();
       
@@ -52,19 +53,18 @@ class update {
 
       pTag,
       pFile,
-      pContent,
-      oDatabase
+      pContent
 
    }) {
 
       // if (existing file) <
-      if (await oDatabase.isFile({pTag : pTag, pFile : pFile})) {
+      if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
 
          const decrypted = await this.oDecrypt.core({
 
             pTag : pTag,
-            pUsers : await oDatabase.getUsers(),
-            pEncrypted : await oDatabase.getFile({
+            pUsers : await this.database.getUsers(),
+            pEncrypted : await this.database.getFile({
 
                pTag : pTag,
                pFile : pFile
@@ -76,7 +76,7 @@ class update {
          await this.oEncrypt.core({
 
             pTag : pTag,
-            pUsers : await oDatabase.getUsers(),
+            pUsers : await this.database.getUsers(),
             pContent : {
 
                'owner' : pTag,

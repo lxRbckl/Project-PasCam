@@ -6,7 +6,7 @@
 
 class show {
 
-   constructor() {}
+   constructor(pDatabase) {this.database = pDatabase;}
 
 
    context() {
@@ -22,17 +22,12 @@ class show {
    }
 
 
-   async run({
-
-      pTag,
-      oDatabase
-
-   }) {
+   async run({pTag}) {
 
       // if (user in database) <
-      if (await oDatabase.isFile({pTag : '', pFile : pTag})) {
+      if (await this.database.isFile({pTag : '', pFile : pTag})) {
 
-         const files = await oDatabase.getFiles(pTag);
+         const files = await this.database.getFiles(pTag);
          return files.map((i) => {return i.slice(0, -5);}).join('\n');   
 
       }

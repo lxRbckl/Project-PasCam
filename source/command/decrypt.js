@@ -44,14 +44,14 @@ class decrypt extends encrypt {
    async core({
 
       pTag,
-      pUsers,
-      pEncrypted
+      pData,
+      pUsers
 
    }) {
 
       // setup <
-      const content = pEncrypted['content'];
-      const iv = Buffer.from(pEncrypted['iv']);
+      const data = pData['data'];
+      const iv = Buffer.from(pData['iv']);
       const key = Buffer.from(pUsers[pTag]['key']);
 
       const decipher = createDecipheriv(
@@ -66,7 +66,7 @@ class decrypt extends encrypt {
 
       return JSON.parse(decipher.update(
 
-         content,
+         data,
          this.outputEncoding,
          this.inputEncoding
 
@@ -82,30 +82,33 @@ class decrypt extends encrypt {
 
    }) {
 
-
-
       // if (existing file) <
       // else (then new file) <
       if (await this.database.exists({pDir : pTag, pName : pFile})) {
 
-         const result = await this.core({
+         const {
+
+            share,
+            owner,
+            content
+
+         } = await this.core({
 
             pTag : pTag,
-            pFile : pFile,
             pUsers : await this.database.getUsers(),
-            pEncrypted : await this.database.getFile({pFile : `${pTag}/${pFile}`})            
+            pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
 
          });
 
          return {
 
-            content : result['content'].replace(/ /g, '\n'),
+            content : content,
             footer : {
 
-               false : `Shared by ${result['owner']}`,
-               true : `Shared with ${result['share'].join(' • ')}`
+               false : 'Shared by ' + owner + '.',
+               true : 'Shared with ' + share?.join(' • ')
 
-            }[pTag == result['owner']]
+            }[pTag == owner]
 
          };
       

@@ -99,9 +99,54 @@ class share {
    }
 
 
-   async isOwner({}) {
+   async isOwner({
+
+      pTag,
+      pFile
+
+   }) {
+
+      const result = await this.decrypt.core({
+
+         pTag : pTag,
+         pUsers : await this.database.getUsers(),
+         pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
+
+      });
+
+      return pTag == result['owner'];
+
+   }
 
 
+   async core({
+
+      pFile,
+      pOwner,
+      pUsers,
+      pAction,
+      pReceiver
+
+   }) {
+
+      const result = this.decrypt.core({
+
+         pTag : pOwner,
+         pUsers : pUsers,
+         pData : await this.database.getFile({pFile : `${pOwner}/${pFile}`})
+
+      });
+
+      const share = {
+
+         'add' : () => {return [...result['share'], pReceiver]},
+         'remove' : () => {return result['share'].filter(i => i != pReceiver)}
+
+      }[pAction]();
+
+      console.log('share', share); // remove
+
+      
 
    }
 

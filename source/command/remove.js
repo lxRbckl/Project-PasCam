@@ -48,37 +48,9 @@ class remove extends share {
 
       // if (file exists) <
       // else (then new file) <
-      // if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
       if (await this.database.exists({pDir : pTag, pName : pFile})) {
 
-         // decrypt caller
-         // decrypt owner? from caller
-         // delete file for caller
-         // remove caller from owner's share
-
-
-
-
-         // const result = await this.decrypt.core({
-
-         //    pTag : pTag,
-         //    pUsers : this.database.getUsers(),
-         //    pEncrypted : await this.database.getFile({
-
-         //    })
-
-         // })
-
-         // await this.database.delFile({
-
-         //    pTag : pTag,
-         //    pFile : pFile
-
-         // });
-
-         // 
-
-         return `${pFile.slice(0, -5)} was removed successfully.`;
+         
 
       } else {return {content : 'There was an error.'};}
 

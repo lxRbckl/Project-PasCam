@@ -216,7 +216,7 @@ class client {
             this.guildId
 
          ),
-         {body : Object.values(this.commands).map((i) => {return i.context();})}
+         {body : Object.values(this.commands).map(i => i.context())}
 
       );
 

@@ -59,14 +59,15 @@ class encrypt {
    async core({
 
       pTag,
-      pUsers,
-      pContent
+      pData,
+      pFile,
+      pUsers
 
    }) {
 
       // setup <
+      const data = JSON.stringify(pData);
       const iv = randomBytes(this.ivSize);
-      const content = JSON.stringify(pContent);
       const key = Buffer.from(pUsers[pTag]['key']);
 
       const cipher = createCipheriv(
@@ -79,18 +80,23 @@ class encrypt {
 
       // >
 
-      return {
+      await this.database.setFile({
 
-         'iv' : iv,
-         'content' : cipher.update(
+         pFile : `${pTag}/${pFile}`,
+         pData : {
 
-            content,
-            this.inputEncoding,
-            this.outputEncoding
+            'iv' : iv,
+            'data' : cipher.update(
 
-         ) + cipher.final(this.outputEncoding)
+               data,
+               this.inputEncoding,
+               this.outputEncoding
 
-      };
+            ) + cipher.final(this.outputEncoding)
+
+         }
+
+      });
 
    }
 
@@ -107,28 +113,22 @@ class encrypt {
       // else (then existing file) <
       if (!(await this.database.exists({pDir : pTag, pName : pFile}))) {
 
-         const result = await this.core({
+         await this.core({
 
             pTag : pTag,
+            pFile : pFile,
             pUsers : await this.database.getUsers(),
-            pContent : {
+            pData : {
 
                'share' : [],
                'owner' : pTag,
                'content' : pContent
 
             }
-
+            
          });
 
-         await this.database.setFile({
-
-            pData : result,
-            pFile : `${pTag}/${pFile}`
-
-         });
-
-         return {content : `${pFile.slice(0, -5)} was added successfully.`};
+         return {content : pFile.slice(0, -5) + ' was added successfully.'};
 
       } else {return {content : 'There was an error.'};}
 

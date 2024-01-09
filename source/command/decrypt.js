@@ -82,12 +82,16 @@ class decrypt extends encrypt {
 
    }) {
 
+
+
       // if (existing file) <
+      // else (then new file) <
       if (await this.database.exists({pDir : pTag, pName : pFile})) {
 
          const result = await this.core({
 
             pTag : pTag,
+            pFile : pFile,
             pUsers : await this.database.getUsers(),
             pEncrypted : await this.database.getFile({pFile : `${pTag}/${pFile}`})            
 
@@ -95,8 +99,7 @@ class decrypt extends encrypt {
 
          return {
 
-            owner : result['owner'],
-            content : result['content'],
+            content : result['content'].replace(/ /g, '\n'),
             footer : {
 
                false : `Shared by ${result['owner']}`,
@@ -106,7 +109,7 @@ class decrypt extends encrypt {
 
          };
       
-      }
+      } else {return {content : 'There was an error.'};}
 
       // >
    

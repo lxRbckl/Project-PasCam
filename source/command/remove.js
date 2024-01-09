@@ -49,19 +49,27 @@ class remove {
    }) {
 
       // if (file exists) <
-      if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
+      // else (then new file) <
+      // if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
+      if (await this.database.exists({pDir : pTag, pName : pFile})) {
 
-         const result = await this.decrypt.core({
-
-            pTag : pTag,
-            pUsers : this.database.getUsers(),
-            pEncrypted : await this.database.getFile({
-
+         // decrypt caller
+         // decrypt owner? from caller
+         // delete file for caller
+         // remove caller from owner's share
 
 
-            })
+         
 
-         })
+         // const result = await this.decrypt.core({
+
+         //    pTag : pTag,
+         //    pUsers : this.database.getUsers(),
+         //    pEncrypted : await this.database.getFile({
+
+         //    })
+
+         // })
 
          // await this.database.delFile({
 
@@ -70,9 +78,11 @@ class remove {
 
          // });
 
+         // 
+
          return `${pFile.slice(0, -5)} was removed successfully.`;
 
-      }
+      } else {return {content : 'There was an error.'};}
 
       // >
 

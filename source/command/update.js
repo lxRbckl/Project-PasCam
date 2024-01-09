@@ -60,34 +60,37 @@ class update {
       // if (existing file) <
       if (await this.database.isFile({pTag : pTag, pFile : pFile})) {
 
-         const decrypted = await this.oDecrypt.core({
+         // check and see if it was originally a shared file //
+         // update owner's file if it was indeed shared //
 
-            pTag : pTag,
-            pUsers : await this.database.getUsers(),
-            pEncrypted : await this.database.getFile({
+         // const decrypted = await this.oDecrypt.core({
 
-               pTag : pTag,
-               pFile : pFile
+         //    pTag : pTag,
+         //    pUsers : await this.database.getUsers(),
+         //    pEncrypted : await this.database.getFile({
 
-            })
+         //       pTag : pTag,
+         //       pFile : pFile
 
-         });
+         //    })
 
-         await this.oEncrypt.core({
+         // });
 
-            pTag : pTag,
-            pUsers : await this.database.getUsers(),
-            pContent : {
+         // await this.oEncrypt.core({
 
-               'owner' : pTag,
-               'content' : pContent,
-               'share' : decrypted['share']
+         //    pTag : pTag,
+         //    pUsers : await this.database.getUsers(),
+         //    pContent : {
 
-            }
+         //       'owner' : pTag,
+         //       'content' : pContent,
+         //       'share' : decrypted['share']
 
-         });
+         //    }
 
-         return true;
+         // });
+
+         // return true;
 
       }
 

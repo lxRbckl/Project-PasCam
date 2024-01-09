@@ -140,26 +140,31 @@ class client {
       this.client.on('interactionCreate', async (interaction) => {
 
          const interactionId = interaction.user.id;
-         const user = await this.database.getUsers();
+         const users = await this.database.getUsers();
 
          // if (authentic) <
-         if (interactionId == user[interaction.user.tag]['id']) {
+         if (interactionId == users[interaction.user.tag]['id']) {
 
-            const result = await this.commands[interaction.commandName].run({
+            const {
+
+               footer,
+               content
+
+            } = await this.commands[interaction.commandName].run({
 
                pTag : interaction.user.tag,
                pAction : interaction.options.get('action')?.value,
                pContent : interaction.options.get('content')?.value,
-               pFile : `${interaction.options.get('file')?.value}.json`
+               pFile : interaction.options.get('file')?.value + '.json'
 
             });
 
             await this.message({
 
+               pFooterText : footer,
                pKind : 'interaction',
+               pDescription : content,
                pInteraction : interaction,
-               pFooterText : result['footer'],
-               pDescription : result['content'],
                pTitle : interaction.commandName
 
             });

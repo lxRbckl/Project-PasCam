@@ -64,7 +64,6 @@ class encrypt {
 
    }) {
 
-
       // setup <
       const iv = randomBytes(this.ivSize);
       const content = JSON.stringify(pContent);
@@ -105,31 +104,33 @@ class encrypt {
    }) {
 
       // if (new file) <
+      // else (then existing file) <
       if (!(await this.database.exists({pDir : pTag, pName : pFile}))) {
 
-         await this.database.setFile({
+         const result = await this.core({
 
             pTag : pTag,
-            pFile : pFile,
-            pData : await this.core({
+            pUsers : await this.database.getUsers(),
+            pContent : {
 
-               pTag : pTag,
-               pUsers : await this.database.getUsers(),
-               pContent : {
+               'share' : [],
+               'owner' : pTag,
+               'content' : pContent
 
-                  'share' : [],
-                  'owner' : pTag,
-                  'content' : pContent
-
-               }
-
-            })
+            }
 
          });
 
-         return `${pFile.slice(0, -5)} was added successfully.`;
+         await this.database.setFile({
 
-      }
+            pData : result,
+            pFile : `${pTag}/${pFile}`
+
+         });
+
+         return {content : `${pFile.slice(0, -5)} was added successfully.`};
+
+      } else {return {content : 'There was an error.'};}
 
       // >
 

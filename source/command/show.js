@@ -33,7 +33,7 @@ class show {
 
          return {content : result.join('\n')};   
 
-      } else {return {content : 'You do not exist in our database.'};}
+      } else {return {content : 'We were unable to find you.'};}
 
       // >
 

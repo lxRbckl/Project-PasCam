@@ -1,17 +1,15 @@
 // import <
-const encrypt = require('./encrypt.js');
-const decrypt = require('./decrypt.js');
+const share = require('./share.js');
 
 // >
 
 
-class update {
+class update extends share {
 
    constructor(pDatabase) {
 
+      super(pDatabase);
       this.database = pDatabase;
-      this.oEncrypt = new encrypt();
-      this.oDecrypt = new decrypt();
       
    }
 

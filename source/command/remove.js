@@ -1,17 +1,15 @@
 // import <
-const encrypt = require('./encrypt.js');
-const decrypt = require('./decrypt.js');
+const share = require('./share.js');
 
 // >
 
 
-class remove {
+class remove extends share {
 
    constructor(pDatabase) {
 
+      super(pDatabase);
       this.database = pDatabase;
-      this.encrypt = new encrypt();
-      this.decrypt = new decrypt();
 
    }
 
@@ -59,7 +57,7 @@ class remove {
          // remove caller from owner's share
 
 
-         
+
 
          // const result = await this.decrypt.core({
 

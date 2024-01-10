@@ -72,7 +72,7 @@ class client {
          'remove' : new remove(this.database),
          'update' : new update(this.database),
          'share' : new share(this.database),
-         'show' : new show(this.database)
+         'show' : new show(this.database),
 
       };
 
@@ -216,7 +216,7 @@ class client {
             this.guildId
 
          ),
-         {body : Object.values(this.commands).map(i => i.context())}
+         {body : (Object.values(this.commands)).map(i => i.context())}
 
       );
 

@@ -63,7 +63,6 @@ class share {
                name : 'to',
                required : true,
                description : 'description'
-               // add list of users to choose from
                
 
             },
@@ -121,6 +120,7 @@ class share {
 
    async core({
 
+      pTag,
       pFile,
       pOwner,
       pUsers,
@@ -144,9 +144,20 @@ class share {
 
       }[pAction]();
 
-      console.log('share', share); // remove
+      await this.encrypt.core({
 
-      
+         pTag : pTag,
+         pFile : pFile,
+         pUsers : pUsers,
+         pData : {
+
+            'share' : share,
+            'owner' : result[owner],
+            'content' : result[content]
+
+         }
+
+      });
 
    }
 

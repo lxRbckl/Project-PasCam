@@ -127,8 +127,8 @@ class encrypt {
             }
             
          });
-
-         return {content : pFile.slice(0, -5) + ' was added successfully.'};
+         
+         return {content : pFile.slice(0, -5) + 'was added successfully.'};
 
       } else {return {content : 'There was an error.'};}
 

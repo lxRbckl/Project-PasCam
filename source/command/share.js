@@ -63,7 +63,6 @@ class share {
                name : 'to',
                required : true,
                description : 'description'
-               
 
             },
             {

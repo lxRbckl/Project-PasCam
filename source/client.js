@@ -155,6 +155,7 @@ class client {
                pTag : interaction.user.tag,
                pAction : interaction.options.get('action')?.value,
                pContent : interaction.options.get('content')?.value,
+               pReceiver : interaction.options.get('receiver')?.value,
                pFile : interaction.options.get('file')?.value + '.json'
 
             });

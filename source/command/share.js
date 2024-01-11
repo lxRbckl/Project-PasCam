@@ -60,33 +60,9 @@ class share {
             {
 
                type : 3,
-               name : 'to',
                required : true,
+               name : 'receiver',
                description : 'description'
-
-            },
-            {
-
-               type : 3,
-               name : 'notify',
-               required : true,
-               description : 'description',
-               choices : [
-
-                  {
-
-                     name : 'no',
-                     value : 'no'
-
-                  },
-                  {
-
-                     name : 'yes',
-                     value : 'yes'
-
-                  }
-
-               ]
 
             }
 
@@ -97,51 +73,15 @@ class share {
    }
 
 
-   async isOwner({
-
-      pTag,
-      pFile
-
-   }) {
-
-      const result = await this.decrypt.core({
-
-         pTag : pTag,
-         pUsers : await this.database.getUsers(),
-         pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
-
-      });
-
-      return pTag == result['owner'];
-
-   }
-
-
    async core({
 
       pTag,
       pFile,
-      pOwner,
       pUsers,
       pAction,
       pReceiver
 
    }) {
-
-      const result = this.decrypt.core({
-
-         pTag : pOwner,
-         pUsers : pUsers,
-         pData : await this.database.getFile({pFile : `${pOwner}/${pFile}`})
-
-      });
-
-      const share = {
-
-         'add' : () => {return [...result['share'], pReceiver]},
-         'remove' : () => {return result['share'].filter(i => i != pReceiver)}
-
-      }[pAction]();
 
       await this.encrypt.core({
 
@@ -150,9 +90,14 @@ class share {
          pUsers : pUsers,
          pData : {
 
-            'share' : share,
             'owner' : result[owner],
-            'content' : result[content]
+            'content' : result[content],
+            'share' : {
+
+               'add' : [...result['share'], pReceiver],
+               'remove' : result['share'].filter(i => i != pReceiver)
+
+            }[pAction]
 
          }
 
@@ -161,9 +106,74 @@ class share {
    }
 
 
-   async run({}) {
+   async isOwner() {
 
 
+
+   }
+
+
+   async isAvailable() {
+
+
+      
+   }
+
+
+   async run({
+
+      pTag,
+      pFile,
+      pAction,
+      pReceiver
+
+   }) {
+
+      // if (file exists) <
+      if (await this.database.exists({pDir : pTag, pName : pFile})) {
+
+         const users = await this.database.getUsers();
+         const isOpen = !(this.database.exists({
+            
+            pName : pFile,
+            pDir : pReceiver
+         
+         }));
+         const result = this.decrypt.core({
+
+            pTag : pTag,
+            pUsers : users,
+            pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
+
+         })
+
+         // if (original owner) <
+         if (pTag == result['owner']) {
+
+            await this.core({
+
+               pTag : pTag,
+               pFile : pFile,
+               pUsers : users,
+               pAction : pAction,
+               pReceiver : pReceiver
+
+            });
+            await this.encrypt.run({
+
+               pFile : pFile,
+               pTag : pReceiver,
+               pContent : result['content']
+
+            });
+
+         }
+
+         // >
+
+      }
+
+      // >
 
    }
 

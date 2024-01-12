@@ -12,8 +12,6 @@ class share {
       this.database = pDatabase;
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
-      this.success = 'was successful.';
-      this.fail = 'We were unable to share your file.';
 
    }
 
@@ -63,7 +61,7 @@ class share {
 
                type : 3,
                required : true,
-               name : 'receiver',
+               name : 'recipient',
                description : 'description'
 
             }
@@ -81,29 +79,31 @@ class share {
       pFile,
       pUsers,
       pAction,
-      pReceiver
+      pRecipient
 
    }) {
 
-      await this.encrypt.core({
 
-         pTag : pTag,
-         pFile : pFile,
-         pUsers : pUsers,
-         pData : {
 
-            'owner' : result[owner],
-            'content' : result[content],
-            'share' : {
+      // await this.encrypt.core({
 
-               'add' : [...result['share'], pReceiver],
-               'remove' : result['share'].filter(i => i != pReceiver)
+      //    pTag : pTag,
+      //    pFile : pFile,
+      //    pUsers : pUsers,
+      //    pData : {
 
-            }[pAction]
+      //       'owner' : result[owner],
+      //       'content' : result[content],
+      //       'share' : {
 
-         }
+      //          'add' : [...result['share'], pReceiver],
+      //          'remove' : result['share'].filter(i => i != pReceiver)
 
-      });
+      //       }[pAction]
+
+      //    }
+
+      // });
 
    }
 
@@ -114,58 +114,77 @@ class share {
 
    async run({
 
-      pTag,
-      pFile,
       pAction,
-      pReceiver
+      pFilePath,
+      pRecipient
 
    }) {
 
-      // if (file exists) <
-      if (await this.database.exists({pDir : pTag, pName : pFile})) {
+      // // if (available file) <
 
-         const users = await this.database.getUsers();
-         const isOpen = !(this.database.exists({
+      // // else (then unavailable file) <
+      // if (this.database.exists({pDir : pReceiver, pName : pFile})) {
+
+
+
+      // }
+
+
+      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
+
+      let [pTag, pFile] = pFilePath.split('/');
+      console.log('>', pTag, pFile); // remove
+
+
+      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
+
+      // // if (file exists) <
+      // if (await this.database.exists({pDir : pTag, pName : pFile})) {
+
+      //    const users = await this.database.getUsers();
+      //    const isOpen = !(this.database.exists({
             
-            pName : pFile,
-            pDir : pReceiver
+      //       pName : pFile,
+      //       pDir : pReceiver
          
-         }));
-         const result = this.decrypt.core({
+      //    }));
+      //    const result = this.decrypt.core({
 
-            pTag : pTag,
-            pUsers : users,
-            pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
+      //       pTag : pTag,
+      //       pUsers : users,
+      //       pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
 
-         })
+      //    })
 
-         // if (original owner) <
-         if (pTag == result['owner']) {
+      //    // if (original owner) <
+      //    if (pTag == result['owner']) {
 
-            await this.core({
+      //       await this.core({
 
-               pTag : pTag,
-               pFile : pFile,
-               pUsers : users,
-               pAction : pAction,
-               pReceiver : pReceiver
+      //          pTag : pTag,
+      //          pFile : pFile,
+      //          pUsers : users,
+      //          pAction : pAction,
+      //          pReceiver : pReceiver
 
-            });
-            await this.encrypt.run({
+      //       });
+      //       await this.encrypt.run({
 
-               pFile : pFile,
-               pTag : pReceiver,
-               pContent : result['content']
+      //          pFile : pFile,
+      //          pTag : pReceiver,
+      //          pContent : result['content']
 
-            });
+      //       });
 
-         }
+      //    }
 
-         // >
+      //    // >
 
-      }
+      // }
 
-      // >
+      // // >
+
+      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
 
    }
 

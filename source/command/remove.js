@@ -10,8 +10,6 @@ class remove extends share {
 
       super(pDatabase);
       this.database = pDatabase;
-      this.success = 'was successfully removed.';
-      this.fail = 'We were unable to remove your file.';
 
    }
 
@@ -48,15 +46,7 @@ class remove extends share {
 
    }) {
 
-      // if (file exists) <
-      // else (then new file) <
-      if (await this.database.exists({pDir : pTag, pName : pFile})) {
-
-         
-
-      } else {return {content : 'There was an error.'};}
-
-      // >
+      //
 
    }
 

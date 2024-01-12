@@ -19,7 +19,6 @@ class encrypt {
       this.outputEncoding = 'hex';
       this.inputEncoding = 'utf-8';
       this.algorithm = 'aes-256-cbc';
-      this.success = 'was successfully encrypted.';
 
    }
 
@@ -61,8 +60,8 @@ class encrypt {
 
       pTag,
       pKey,
-      pFile,
       pContent,
+      pFilepath,
 
       pShare = []
 
@@ -86,7 +85,7 @@ class encrypt {
 
       await this.database.setFile({
 
-         pFile : pFile,
+         pFile : pFilepath,
          pData : {
 
             'iv' : iv,

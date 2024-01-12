@@ -24,18 +24,10 @@ class show {
 
    async run({pTag}) {
 
-      // if (user in database) <
-      // else (then user not in database) <
-      if (await this.database.exists({pDir : '', pName : pTag})) {
+      let files = await this.database.getDir({pDir : pTag});
+      let result = files.map(i => i.slice(0, -5)).join('\n');
 
-         const files = await this.database.getDir({pDir : pTag});
-         const result = files.map((i) => {return i.slice(0, -5);});
-
-         return {content : result.join('\n')};   
-
-      } else {return {content : 'We were unable to find you.'};}
-
-      // >
+      return {content : result};
 
    }
 

@@ -27,7 +27,7 @@ class database extends local {
    async checkMember(pTag) {
 
       const inDirectory = await this.exists({pDir : '', pName : pTag});
-      const inUsers = (((Object.values(this.getUsers)).indexOf(pTag)) != -1);
+      const inUsers = (((Object.values(this.getMembers())).indexOf(pTag)) != -1);
 
       return (!inDirectory && !inUsers);
 

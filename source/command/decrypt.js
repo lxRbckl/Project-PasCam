@@ -78,14 +78,14 @@ class decrypt extends encrypt {
 
       pTag,
       pKey,
-      pFile
+      pFilePath
 
    }) {
 
       const result = await this.core({
 
          pKey : pKey,
-         pData : await this.database.getFile({pFile : pFile})
+         pData : await this.database.getFile({pFile : pFilePath})
 
       });
 

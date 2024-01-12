@@ -72,7 +72,7 @@ class client {
          remove : new remove(this.database),
          update : new update(this.database),
          share : new share(this.database),
-         show : new show(this.database),
+         show : new show(this.database)
 
       };
 
@@ -146,7 +146,7 @@ class client {
 
             let action = interaction.options.get('action')?.value;
             let content = interaction.options.get('content')?.value;
-            let receiver = interaction.options.get('receiver')?.value;
+            let recipient = interaction.options.get('recipient')?.value;
             let file = interaction.options.get('file')?.value + '.json';
 
             // try (if valid input) <
@@ -180,33 +180,42 @@ class client {
                   pUsers : users,
                   pAction : action,
                   pContent : content,
-                  pReceiver : receiver,
                   pKey : users[tag].key,
-                  pFile : tag + '/' + file
+                  pRecipient : recipient,
+                  pFilePath : tag + '/' + file
 
                });
             
-            } catch (error) {result = false;}
+            } catch (error) {console.log(error); result = false;}
 
             // >
 
             await this.message({
 
                pKind : 'interaction',
-               pTitle : file.slice(0, -5),
                pInteraction : interaction,
                pFooterText : result?.footer,
+               pTitle : {
+
+                  true : tag,
+                  false : file.slice(0, -5)
+
+               }[['show'].includes(interaction.commandName)],
                pDescription : {
 
-                  undefined : result?.content,
+                  true : result?.content,
                   false : {
 
+                     // event failure <
+                     // event success <
                      false : `Failed to ${interaction.commandName}.`,
                      undefined : `${interaction.commandName} was successful.`
 
+                     // >
+
                   }[result]
 
-               }[this.commandName == 'decrypt']
+               }[['decrypt', 'show'].includes(interaction.commandName)]
 
             });
 

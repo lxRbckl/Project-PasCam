@@ -12,6 +12,8 @@ class share {
       this.database = pDatabase;
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
+      this.success = 'was successful.';
+      this.fail = 'We were unable to share your file.';
 
    }
 
@@ -106,18 +108,8 @@ class share {
    }
 
 
-   async isOwner() {
-
-
-
-   }
-
-
-   async isAvailable() {
-
-
-      
-   }
+   // if we remove, then we have to remove the existing file from the users's folder
+   // along with removing him from receivers
 
 
    async run({

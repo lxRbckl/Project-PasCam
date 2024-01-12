@@ -10,6 +10,7 @@ class update extends share {
 
       super(pDatabase);
       this.database = pDatabase;
+      this.success = 'was successfully updated.';
       
    }
 

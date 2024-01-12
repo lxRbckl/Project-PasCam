@@ -10,6 +10,8 @@ class remove extends share {
 
       super(pDatabase);
       this.database = pDatabase;
+      this.success = 'was successfully removed.';
+      this.fail = 'We were unable to remove your file.';
 
    }
 

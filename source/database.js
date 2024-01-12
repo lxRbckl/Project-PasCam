@@ -24,25 +24,17 @@ class database extends local {
    }
 
 
-   async setUser(pTag) {
+   async checkMember(pTag) {
 
       const inDirectory = await this.exists({pDir : '', pName : pTag});
       const inUsers = (((Object.values(this.getUsers)).indexOf(pTag)) != -1);
 
-      // if (new member) <
-      if (!inDirectory && !inUsers) {
-
-         await dirSet({pDir : `${this.referencePath}/${pTag}`});
-         return true;
-
-      }
-
-      // >
+      return (!inDirectory && !inUsers);
 
    }
 
 
-   async getUsers() {
+   async getMembers() {
 
       var users = {};
       const channel = await this.client.channels.fetch(this.channelId);
@@ -51,9 +43,9 @@ class database extends local {
 
          users[(m.embeds[0].title).slice(1, -1)] = {
 
-            'icon' : (m.embeds[0]).thumbnail.url,
-            'id' : (m.embeds[0].description).slice(1, -1).split('\n')[0],
-            'key' : (m.embeds[0].description).slice(1, -1).split('\n')[1]
+            icon : (m.embeds[0]).thumbnail.url,
+            id : (m.embeds[0].description).slice(1, -1).split('\n')[0],
+            key : (m.embeds[0].description).slice(1, -1).split('\n')[1]
 
          };
 

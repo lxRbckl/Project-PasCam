@@ -19,6 +19,7 @@ class encrypt {
       this.outputEncoding = 'hex';
       this.inputEncoding = 'utf-8';
       this.algorithm = 'aes-256-cbc';
+      this.success = 'was successfully encrypted.';
 
    }
 
@@ -56,19 +57,22 @@ class encrypt {
    }
 
 
-   async core({
+   async run({
 
       pTag,
-      pData,
+      pKey,
       pFile,
-      pUsers
+      pContent,
+
+      pShare = []
 
    }) {
 
+      console.log('encrypt running'); // remove
+
       // setup <
-      const data = JSON.stringify(pData);
+      const key = Buffer.from(pKey);
       const iv = randomBytes(this.ivSize);
-      const key = Buffer.from(pUsers[pTag]['key']);
 
       const cipher = createCipheriv(
 
@@ -82,13 +86,19 @@ class encrypt {
 
       await this.database.setFile({
 
-         pFile : `${pTag}/${pFile}`,
+         pFile : pFile,
          pData : {
 
             'iv' : iv,
-            'data' : cipher.update(
+            'text' : cipher.update(
 
-               data,
+               JSON.stringify({
+
+                  owner : pTag,
+                  share : pShare,
+                  content : pContent
+
+               }),
                this.inputEncoding,
                this.outputEncoding
 
@@ -97,42 +107,6 @@ class encrypt {
          }
 
       });
-
-   }
-
-
-   async run({
-
-      pTag,
-      pFile,
-      pContent
-
-   }) {
-
-      // if (new file) <
-      // else (then existing file) <
-      if (!(await this.database.exists({pDir : pTag, pName : pFile}))) {
-
-         await this.core({
-
-            pTag : pTag,
-            pFile : pFile,
-            pUsers : await this.database.getUsers(),
-            pData : {
-
-               'share' : [],
-               'owner' : pTag,
-               'content' : pContent
-
-            }
-            
-         });
-         
-         return {content : pFile.slice(0, -5) + 'was added successfully.'};
-
-      } else {return {content : 'There was an error.'};}
-
-      // >
 
    }
 

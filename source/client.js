@@ -67,12 +67,12 @@ class client {
       // commands <
       this.commands = {
 
-         'encrypt' : new encrypt(this.database),
-         'decrypt' : new decrypt(this.database),
-         'remove' : new remove(this.database),
-         'update' : new update(this.database),
-         'share' : new share(this.database),
-         'show' : new show(this.database),
+         encrypt : new encrypt(this.database),
+         decrypt : new decrypt(this.database),
+         remove : new remove(this.database),
+         update : new update(this.database),
+         share : new share(this.database),
+         show : new show(this.database),
 
       };
 
@@ -135,41 +135,81 @@ class client {
 
    listen() {
 
-      // event (new input) <
-      // event (new member) <
       this.client.on('interactionCreate', async (interaction) => {
 
-         const interactionId = interaction.user.id;
-         const users = await this.database.getUsers();
+         var result = undefined;
+         let tag = interaction.user.tag;
+         let users = await this.database.getMembers();
 
          // if (authentic) <
-         if (interactionId == users[interaction.user.tag]['id']) {
+         if (interaction.user.id == users[tag]['id']) {
 
-            const {
+            let action = interaction.options.get('action')?.value;
+            let content = interaction.options.get('content')?.value;
+            let receiver = interaction.options.get('receiver')?.value;
+            let file = interaction.options.get('file')?.value + '.json';
 
-               footer,
-               content
+            // try (if valid input) <
+            // except (then invalid input) <
+            try {
 
-            } = await this.commands[interaction.commandName].run({
+               result = await {
 
-               pTag : interaction.user.tag,
-               pAction : interaction.options.get('action')?.value,
-               pContent : interaction.options.get('content')?.value,
-               pReceiver : interaction.options.get('receiver')?.value,
-               pFile : interaction.options.get('file')?.value + '.json'
+                  // if (new file) <
+                  // else (then existing file) <
+                  false : {
 
-            });
+                     'show' : this.commands.show,
+                     'encrypt' : this.commands.encrypt
+
+                  }[interaction.commandName],
+                  true : {
+
+                     'share' : this.commands.share,
+                     'remove' : this.commands.remove,
+                     'update' : this.commands.update,
+                     'decrypt' : this.commands.decrypt
+
+                  }[interaction.commandName]
+
+                  // >
+
+               }[await this.database.exists({pDir : tag, pName : file})].run({
+
+                  pTag : tag,
+                  pUsers : users,
+                  pAction : action,
+                  pContent : content,
+                  pReceiver : receiver,
+                  pKey : users[tag].key,
+                  pFile : tag + '/' + file
+
+               });
+            
+            } catch (error) {result = false;}
+
+            // >
 
             await this.message({
 
-               pFooterText : footer,
                pKind : 'interaction',
-               pDescription : content,
+               pTitle : file.slice(0, -5),
                pInteraction : interaction,
-               pTitle : interaction.commandName
+               pFooterText : result?.footer,
+               pDescription : {
+
+                  undefined : result?.content,
+                  false : {
+
+                     false : `Failed to ${interaction.commandName}.`,
+                     undefined : `${interaction.commandName} was successful.`
+
+                  }[result]
+
+               }[this.commandName == 'decrypt']
 
             });
-         
+
          }
 
          // >   
@@ -178,8 +218,9 @@ class client {
       this.client.on('guildMemberAdd', async (member) => {
 
          // if (new member) <
-         if (await this.database.setUser(member.user.tag)) {
+         if (await this.database.checkMember(member.user.tag)) {
 
+            await this.database.setDir({pDir : member.user.tag});
             await this.message({
 
                pKind : 'member',
@@ -200,8 +241,6 @@ class client {
          // >
 
       });
-
-      // >
 
    }
 

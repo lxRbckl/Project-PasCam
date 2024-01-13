@@ -33,14 +33,9 @@ class remove {
    }
 
 
-   async run({
+   async run({pFilePath}) {
 
-      pTag,
-      pFilePath
-
-   }) {
-
-      
+      await this.database.delFile({pFile : pFilePath});
 
    }
 

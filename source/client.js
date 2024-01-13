@@ -146,8 +146,8 @@ class client {
 
             let action = interaction.options.get('action')?.value;
             let content = interaction.options.get('content')?.value;
-            let recipient = interaction.options.get('recipient')?.value;
             let file = interaction.options.get('file')?.value + '.json';
+            let recipient = interaction.options.get('recipient')?.value;
 
             // try (if valid input) <
             // except (then invalid input) <

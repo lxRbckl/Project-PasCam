@@ -1,11 +1,19 @@
 // import <
+const encrypt = require('./encrypt.js');
+const decrypt = require('./decrypt.js');
 
 // >
 
 
 class update {
 
-   constructor(pDatabase) {this.database = pDatabase;}
+   constructor(pDatabase) {
+      
+      this.database = pDatabase;
+      this.encrypt = new encrypt();
+      this.decrypt = new decrypt();
+   
+   }
 
 
    context() {
@@ -44,12 +52,37 @@ class update {
    async run({
 
       pTag,
-      pFile,
-      pContent
+      pKey,
+      pContent,
+      pFilePath
 
    }) {
 
-      //
+      let result = await this.decrypt.core({
+
+         pKey : pKey,
+         pData : await this.database.getFile({pFile : pFilePath})
+
+      });
+
+      await this.encrypt.run({
+
+         pTag : pTag,
+         pKey : pKey,
+         pContent : pContent,
+         pFilePath : pFilePath,
+         pShare : {
+
+            // if (was recipient) <
+            // else (then is owner) <
+            false : pTag,
+            true : result.share
+
+            // >
+
+         }[pTag == result.share]
+
+      });
       
    }
 

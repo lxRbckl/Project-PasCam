@@ -78,6 +78,7 @@ class decrypt extends encrypt {
 
       pTag,
       pKey,
+      pUsers,
       pFilePath
 
    }) {
@@ -89,17 +90,37 @@ class decrypt extends encrypt {
 
       });
 
-      return {
+      // if (shared file) <
+      // else (then original) <
+      if (result.content) {
 
-         content : result.content,
-         footer : {
+         return await this.run({
 
-            false : `Owned by ${result.owner}`,
-            true : `Shared with ${(result.share).join(' • ')}`
+            pUsers : pUsers,
+            pTag : result.owner,
+            pKey : pUsers[result.owner].key,
+            pFilePath : pFilePath.replace(pTag, result.owner)
 
-         }[pTag == result.owner]
+         });
+      
+      }
+      else {
 
-      };
+         return {
+
+            content : result.content,
+            footer : {
+
+               false : `Owned by ${result.owner}`,
+               true : `Shared with ${(result.share).join(' • ')}`
+
+            }[pTag == result.owner]
+         
+         };
+
+      }
+
+      // >
          
    }
 

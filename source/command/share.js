@@ -1,8 +1,15 @@
 // import <
+const remove = require('./remove.js');
 const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
 
 // >
+
+
+// if we remove, then we have to remove the existing file from the users's folder
+// along with removing him from receivers
+// if it IS a share, then we set the content to false and trigger to call owner's file
+// that way we're secure/dependent for updates
 
 
 class share {
@@ -10,6 +17,7 @@ class share {
    constructor(pDatabase) {
 
       this.database = pDatabase;
+      this.remove = new remove();
       this.encrypt = new encrypt();
       this.decrypt = new decrypt();
 
@@ -73,118 +81,116 @@ class share {
    }
 
 
-   async core({
+   async isOwner({
 
       pTag,
-      pFile,
-      pUsers,
-      pAction,
-      pRecipient
+      pKey,
+      pFilePath
 
    }) {
 
+      let result = await this.decrypt.core({
 
+         pKey : pKey,
+         pData : await this.database.getFile({pFile : pFilePath})
 
-      // await this.encrypt.core({
+      });
 
-      //    pTag : pTag,
-      //    pFile : pFile,
-      //    pUsers : pUsers,
-      //    pData : {
-
-      //       'owner' : result[owner],
-      //       'content' : result[content],
-      //       'share' : {
-
-      //          'add' : [...result['share'], pReceiver],
-      //          'remove' : result['share'].filter(i => i != pReceiver)
-
-      //       }[pAction]
-
-      //    }
-
-      // });
+      return pTag == result.owner;
 
    }
 
 
-   // if we remove, then we have to remove the existing file from the users's folder
-   // along with removing him from receivers
+   async core({
 
-
-   async run({
-
+      pTag,
+      pKey,
       pAction,
       pFilePath,
       pRecipient
 
    }) {
 
-      // // if (available file) <
+      let result = await this.decrypt.core({
 
-      // // else (then unavailable file) <
-      // if (this.database.exists({pDir : pReceiver, pName : pFile})) {
+         pKey : pKey,
+         pData : await this.database.getFile({pFile : pFilePath})
+
+      });
+
+      await this.encrypt.run({
+
+         pTag : pTag,
+         pKey : pKey,
+         pFilePath : pFilePath,
+         pContent : result.content,
+         pShare : {
+
+            'add' : [...result.share, pRecipient],
+            'remove' : (result.share).filter(i => i != pRecipient)
+
+         }[pAction]
+
+      });
+
+   }
 
 
+   async run({
 
-      // }
+      pKey,
+      pUsers,
+      pAction,
+      pFilePath,
+      pRecipient
 
+   }) {
 
-      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
+      const[tag, file] = pFilePath.split('/');
+      let isOwner = this.isOwner({pTag : tag, pKey : pKey, pFilePath : pFilePath});
+      let isAvailable = !(this.database.exists({pDir : pRecipient, pName : file}));
 
-      let [pTag, pFile] = pFilePath.split('/');
-      console.log('>', pTag, pFile); // remove
+      return {
 
+         // if (not permitted) <
+         // else (then shareable) <
+         false : false,
+         true : async () => {
 
-      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
+            // owner changes <
+            // recipient changes <
+            await this.core({
 
-      // // if (file exists) <
-      // if (await this.database.exists({pDir : pTag, pName : pFile})) {
+               pTag : pTag,
+               pKey : pKey,
+               pAction : pAction,
+               pFilePath : pFilePath,
+               pRecipient : pRecipient
 
-      //    const users = await this.database.getUsers();
-      //    const isOpen = !(this.database.exists({
+            });
             
-      //       pName : pFile,
-      //       pDir : pReceiver
-         
-      //    }));
-      //    const result = this.decrypt.core({
+            await {
 
-      //       pTag : pTag,
-      //       pUsers : users,
-      //       pData : await this.database.getFile({pFile : `${pTag}/${pFile}`})
+               'add' : await this.encrypt.run,
+               'remove' : await this.remove.run
 
-      //    })
+            }[pAction]({
 
-      //    // if (original owner) <
-      //    if (pTag == result['owner']) {
+               pShare : tag,
+               pContent : false,
+               pTag : pRecipient,
+               pFilePath : pFilePath,
+               pKey : pUsers[pRecipient].key
 
-      //       await this.core({
+            });
 
-      //          pTag : pTag,
-      //          pFile : pFile,
-      //          pUsers : users,
-      //          pAction : pAction,
-      //          pReceiver : pReceiver
+            // >
+            
+         }
 
-      //       });
-      //       await this.encrypt.run({
+         // >
 
-      //          pFile : pFile,
-      //          pTag : pReceiver,
-      //          pContent : result['content']
-
-      //       });
-
-      //    }
-
-      //    // >
-
-      // }
-
-      // // >
-
-      // - -- - - - - - -  - - - - - -  - -- - - - - -- - - - - - - - - - - - - - -
+      }[isOwner && isAvailable];
 
    }
 

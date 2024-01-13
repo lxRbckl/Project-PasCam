@@ -1,17 +1,11 @@
 // import <
-const share = require('./share.js');
 
 // >
 
 
-class remove extends share {
+class remove {
 
-   constructor(pDatabase) {
-
-      super(pDatabase);
-      this.database = pDatabase;
-
-   }
+   constructor(pDatabase) {this.database = pDatabase;}
 
    
    context() {
@@ -42,11 +36,11 @@ class remove extends share {
    async run({
 
       pTag,
-      pFile
+      pFilePath
 
    }) {
 
-      //
+      
 
    }
 

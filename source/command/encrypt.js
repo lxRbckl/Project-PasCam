@@ -67,8 +67,6 @@ class encrypt {
 
    }) {
 
-      console.log('encrypt running'); // remove
-
       // setup <
       const key = Buffer.from(pKey);
       const iv = randomBytes(this.ivSize);

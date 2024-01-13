@@ -1,17 +1,11 @@
 // import <
-const share = require('./share.js');
 
 // >
 
 
 class update extends share {
 
-   constructor(pDatabase) {
-
-      super(pDatabase);
-      this.database = pDatabase;
-      
-   }
+   constructor(pDatabase) {this.database = pDatabase;}
 
 
    context() {

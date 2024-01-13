@@ -3,7 +3,7 @@
 // >
 
 
-class update extends share {
+class update {
 
    constructor(pDatabase) {this.database = pDatabase;}
 

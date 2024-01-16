@@ -94,6 +94,7 @@ class client {
 
    }) {
       
+      console.log('description', pDescription); // remove
       return {
 
          'member' : async () => {
@@ -153,6 +154,13 @@ class client {
             // except (then invalid input) <
             try {
 
+               // remove
+               console.log('- - - - - - - - - - - - - - - - -');
+               console.log('tag', tag);
+               console.log('file', file);
+               console.log('commandName', interaction.commandName);
+               console.log('exists', await this.database.exists({pDir : tag, pName : file}));
+
                result = await {
 
                   // if (new file) <
@@ -186,7 +194,10 @@ class client {
 
                });
             
-            } catch (error) {console.log(error); result = false;}
+            } catch (error) {console.log('error we had', error); result = false;}
+
+            console.log('post result', result); // remove
+
 
             // >
 
@@ -203,17 +214,23 @@ class client {
                }[['show'].includes(interaction.commandName)],
                pDescription : {
 
-                  true : result?.content,
+                  // (decrypt/show) scenario <
+                  // (encrypt/remove/share/update) scenario <
+                  true : {
+
+                     false : result?.content,
+                     true : `${file.slice(0, -5)} does not exist.`
+
+                  }[result == false],
                   false : {
 
-                     // event failure <
-                     // event success <
                      false : `Failed to ${interaction.commandName}.`,
                      undefined : `${interaction.commandName} was successful.`
 
-                     // >
 
                   }[result]
+
+                  // >
 
                }[['decrypt', 'show'].includes(interaction.commandName)]
 

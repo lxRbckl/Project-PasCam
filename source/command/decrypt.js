@@ -90,9 +90,30 @@ class decrypt extends encrypt {
 
       });
 
+      console.log('decrypt result', result); // remove
+
       // if (shared file) <
       // else (then original) <
       if (result.content) {
+
+         console.log('decrypt here 1'); // remove
+
+         return {
+
+            content : '> ' + (result.content).replace(/ /g, '\n> '),
+            footer : {
+
+               false : `Owned by ${result.owner}`,
+               true : `Shared with ${(result.share).join(' • ')}`
+
+            }[pTag == result.owner]
+         
+         };
+      
+      }
+      else {
+
+         console.log('decrypt here 2'); // remove
 
          return await this.run({
 
@@ -102,21 +123,6 @@ class decrypt extends encrypt {
             pFilePath : pFilePath.replace(pTag, result.owner)
 
          });
-      
-      }
-      else {
-
-         return {
-
-            content : result.content,
-            footer : {
-
-               false : `Owned by ${result.owner}`,
-               true : `Shared with ${(result.share).join(' • ')}`
-
-            }[pTag == result.owner]
-         
-         };
 
       }
 

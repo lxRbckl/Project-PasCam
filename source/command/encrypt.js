@@ -61,11 +61,13 @@ class encrypt {
       pTag,
       pKey,
       pContent,
-      pFilepath,
+      pFilePath,
 
       pShare = []
 
    }) {
+
+      console.log('encrypt run'); // remove
 
       // setup <
       const key = Buffer.from(pKey);
@@ -81,9 +83,11 @@ class encrypt {
 
       // >
 
+      console.log('filepath', pFilePath); // remove
+
       await this.database.setFile({
 
-         pFile : pFilepath,
+         pFile : pFilePath,
          pData : {
 
             'iv' : iv,
@@ -104,6 +108,8 @@ class encrypt {
          }
 
       });
+
+      console.log('encrypt end'); // remove
 
    }
 

@@ -103,10 +103,15 @@ class decrypt extends encrypt {
             content : '> ' + (result.content).replace(/ /g, '\n> '),
             footer : {
 
-               false : `Owned by ${result.owner}`,
-               true : `Shared with ${(result.share).join(' • ')}`
+               // REVISE REVISE REVISE
+               // true (if ) <
+               // false (then ) <
+               true : `Owned by ${result.share[0]}`,
+               false : `Shared with ${(result.share).join(' • ')}`
 
-            }[pTag == result.owner]
+               // >
+
+            }[result.content == false]
          
          };
       

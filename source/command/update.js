@@ -76,7 +76,7 @@ class update {
          pShare : {
 
             // false (then is owner) <
-            // true (then was recipient) <
+            // true (if was recipient) <
             false : [],
             true : result.share
 

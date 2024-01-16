@@ -163,8 +163,8 @@ class client {
 
                result = await {
 
-                  // if (new file) <
-                  // else (then existing file) <
+                  // false (if new file) <
+                  // true (then existing file) <
                   false : {
 
                      'show' : this.commands.show,
@@ -214,8 +214,8 @@ class client {
                }[['show'].includes(interaction.commandName)],
                pDescription : {
 
-                  // (decrypt/show) scenario <
-                  // (encrypt/remove/share/update) scenario <
+                  // true (if decrypt/show) <
+                  // false (then encrypt/remove/share/update) <
                   true : {
 
                      false : result?.content,

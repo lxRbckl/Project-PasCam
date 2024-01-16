@@ -154,7 +154,7 @@ class share {
 
          // if (not permitted) <
          // else (then shareable) <
-         false : false,
+         false : () => {return false;},
          true : async () => {
 
             // owner changes <
@@ -176,9 +176,9 @@ class share {
 
             }[pAction]({
 
-               pShare : tag,
+               pTag : tag,
+               pShare : [],
                pContent : false,
-               pTag : pRecipient,
                pFilePath : pFilePath,
                pKey : pUsers[pRecipient].key
 
@@ -190,7 +190,7 @@ class share {
 
          // >
 
-      }[isOwner && isAvailable];
+      }[isOwner && isAvailable]();
 
    }
 

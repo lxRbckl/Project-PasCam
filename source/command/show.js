@@ -25,9 +25,9 @@ class show {
    async run({pTag}) {
 
       let files = await this.database.getDir({pDir : pTag});
-      let result = files.map(i => i.slice(0, -5)).join('\n');
+      let result = files.map(i => `> ${i.slice(0, -5)}`);
 
-      return {content : result};
+      return {content : result.join('\n')};
 
    }
 

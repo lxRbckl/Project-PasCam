@@ -183,7 +183,7 @@ class client {
                   pKey : users[tag].key,
                   pRecipient : recipient,
                   pFilePath : tag + '/' + file,
-                  oRemove : this.commands.remove
+                  oRemove : this.commands.remove,
 
                });
             
@@ -242,7 +242,7 @@ class client {
             await this.message({
 
                pKind : 'member',
-               pTitle : member.user.tag,
+               pTitle : (member.user.tag).toLowerCase(),
                pThumbnail : member.user.displayAvatarURL(),
                pChannel : await this.client.channels.cache.get(this.channelId),
                pDescription : [

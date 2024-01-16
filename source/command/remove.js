@@ -50,15 +50,12 @@ class remove extends share {
    }) {
 
 
-      console.log('remove running'); // remove
       let result = await this.decrypt.core({
 
          pKey : pKey,
          pData : await this.database.getFile({pFile : pFilePath})
 
       });
-
-      console.log('remove result', result); // remove
 
       // delete (involved, recipients?) <
       // if recipient then update owner <
@@ -68,8 +65,6 @@ class remove extends share {
          await this.database.delFile({pFile : `${m}/${file}`});
 
       }
-
-      console.log('here'); // remove
 
       if (result.owner != tag) {
          

@@ -140,8 +140,23 @@ class share {
    }) {
 
       const[tag, file] = pFilePath.split('/');
-      let isOwner = this.isOwner({pTag : tag, pKey : pKey, pFilePath : pFilePath});
-      let isAvailable = !(this.database.exists({pDir : pRecipient, pName : file}));
+      let isAvailable = await this.database.exists({
+         
+         pName : file,
+         pDir : pRecipient
+      
+      });
+      let isOwner = await this.isOwner({
+         
+         pTag : tag, 
+         pKey : pKey, 
+         pFilePath : pFilePath
+      
+      });
+
+      console.log('recipient', pRecipient); // remove
+      console.log('isOwner', isOwner); // remove
+      console.log('isAvailable', isAvailable); // remove
 
       return {
 

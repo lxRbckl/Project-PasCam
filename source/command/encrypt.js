@@ -67,8 +67,6 @@ class encrypt {
 
    }) {
 
-      console.log('encrypt run'); // remove
-
       // setup <
       const key = Buffer.from(pKey);
       const iv = randomBytes(this.ivSize);
@@ -82,8 +80,6 @@ class encrypt {
       );
 
       // >
-
-      console.log('filepath', pFilePath); // remove
 
       await this.database.setFile({
 
@@ -108,8 +104,6 @@ class encrypt {
          }
 
       });
-
-      console.log('encrypt end'); // remove
 
    }
 

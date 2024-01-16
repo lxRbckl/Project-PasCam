@@ -1,9 +1,3 @@
-// import <
-
-
-// >
-
-
 class show {
 
    constructor(pDatabase) {this.database = pDatabase;}

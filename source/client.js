@@ -94,7 +94,6 @@ class client {
 
    }) {
       
-      console.log('description', pDescription); // remove
       return {
 
          'member' : async () => {
@@ -143,7 +142,7 @@ class client {
          let users = await this.database.getMembers();
 
          // if (authentic) <
-         if (interaction.user.id == users[tag]['id']) {
+         if (interaction.user.id == users[tag].id) {
 
             let action = interaction.options.get('action')?.value;
             let content = interaction.options.get('content')?.value;
@@ -153,13 +152,6 @@ class client {
             // try (if valid input) <
             // except (then invalid input) <
             try {
-
-               // remove
-               console.log('- - - - - - - - - - - - - - - - -');
-               console.log('tag', tag);
-               console.log('file', file);
-               console.log('commandName', interaction.commandName);
-               console.log('exists', await this.database.exists({pDir : tag, pName : file}));
 
                result = await {
 
@@ -190,14 +182,14 @@ class client {
                   pContent : content,
                   pKey : users[tag].key,
                   pRecipient : recipient,
-                  pFilePath : tag + '/' + file
+                  pFilePath : tag + '/' + file,
+                  oRemove : this.commands.remove
 
                });
             
             } catch (error) {console.log('error we had', error); result = false;}
 
-            console.log('post result', result); // remove
-
+            console.log('result', result); // remove
 
             // >
 

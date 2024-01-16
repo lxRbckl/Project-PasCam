@@ -1,15 +1,8 @@
 // import <
-const remove = require('./remove.js');
 const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
 
 // >
-
-
-// if we remove, then we have to remove the existing file from the users's folder
-// along with removing him from receivers
-// if it IS a share, then we set the content to false and trigger to call owner's file
-// that way we're secure/dependent for updates
 
 
 class share {
@@ -17,7 +10,6 @@ class share {
    constructor(pDatabase) {
 
       this.database = pDatabase;
-      this.remove = new remove(this.database);
       this.encrypt = new encrypt(this.database);
       this.decrypt = new decrypt(this.database);
 
@@ -96,7 +88,7 @@ class share {
 
       });
 
-      return pTag == result.owner;
+      return (pTag == result.owner);
 
    }
 
@@ -140,6 +132,7 @@ class share {
 
       pKey,
       pUsers,
+      oRemove,
       pAction,
       pFilePath,
       pRecipient
@@ -161,7 +154,7 @@ class share {
             // recipient changes <
             await this.core({
 
-               pTag : pTag,
+               pTag : tag,
                pKey : pKey,
                pAction : pAction,
                pFilePath : pFilePath,
@@ -171,8 +164,8 @@ class share {
             
             await {
 
-               'add' : await this.encrypt.run,
-               'remove' : await this.remove.run
+               'remove' : await oRemove.run,
+               'add' : await this.encrypt.run
 
             }[pAction]({
 

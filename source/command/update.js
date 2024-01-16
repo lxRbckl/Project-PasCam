@@ -65,8 +65,6 @@ class update {
 
       });
 
-      console.log('share', result.share); // remove
-      console.log('update is share', (pTag == result.share));
       await this.encrypt.run({
 
          pTag : pTag,
@@ -75,8 +73,8 @@ class update {
          pFilePath : pFilePath,
          pShare : {
 
-            // false (then is owner) <
-            // true (if was recipient) <
+            // true (if owner) <
+            // false (then is recipient) <
             false : [],
             true : result.share
 

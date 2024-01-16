@@ -1,19 +1,18 @@
 // import <
 const share = require('./share.js');
-const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
 
 // >
 
 
-class remove {
+class remove extends share {
 
    constructor(pDatabase) {
       
+      super(pDatabase);
       this.database = pDatabase;
-      this.encrypt = new encrypt(this.database);
-      this.decrypt = new decrypt(this.database);
-   
+      this.decrypt = new decrypt(pDatabase);
+
    }
 
    
@@ -45,24 +44,48 @@ class remove {
    async run({
    
       pKey,
+      pUsers,
       pFilePath
    
    }) {
 
+
+      console.log('remove running'); // remove
       let result = await this.decrypt.core({
 
          pKey : pKey,
-         pData : this.database.getFile({pFile : pFilePath})
+         pData : await this.database.getFile({pFile : pFilePath})
 
       });
 
-      let [tag, file] = pFilePath.split('/');
-      for (const m of [tag, ...result]) {
+      console.log('remove result', result); // remove
 
-         let fp = `${m}/${file}`;
-         await this.database.delFile({pFile : fp});
+      // delete (involved, recipients?) <
+      // if recipient then update owner <
+      let [tag, file] = pFilePath.split('/');
+      for (const m of [tag, ...result.share]) {
+
+         await this.database.delFile({pFile : `${m}/${file}`});
 
       }
+
+      console.log('here'); // remove
+
+      if (result.owner != tag) {
+         
+         await this.core({
+
+            pRecipient : tag,
+            pAction : 'remove',
+            pTag : result.owner,
+            pKey : pUsers[result.owner].key,
+            pFilePath : `${result.owner}/${file}`
+
+         });
+      
+      }
+
+      // >
 
    }
 

@@ -10,8 +10,8 @@ class update {
    constructor(pDatabase) {
       
       this.database = pDatabase;
-      this.encrypt = new encrypt();
-      this.decrypt = new decrypt();
+      this.encrypt = new encrypt(this.database);
+      this.decrypt = new decrypt(this.database);
    
    }
 
@@ -65,6 +65,8 @@ class update {
 
       });
 
+      console.log('share', result.share); // remove
+      console.log('update is share', (pTag == result.share));
       await this.encrypt.run({
 
          pTag : pTag,
@@ -73,14 +75,14 @@ class update {
          pFilePath : pFilePath,
          pShare : {
 
-            // if (was recipient) <
-            // else (then is owner) <
-            false : pTag,
+            // false (then is owner) <
+            // true (then was recipient) <
+            false : [],
             true : result.share
 
             // >
 
-         }[pTag == result.share]
+         }[pTag == result.owner]
 
       });
       

@@ -17,9 +17,9 @@ class share {
    constructor(pDatabase) {
 
       this.database = pDatabase;
-      this.remove = new remove();
-      this.encrypt = new encrypt();
-      this.decrypt = new decrypt();
+      this.remove = new remove(this.database);
+      this.encrypt = new encrypt(this.database);
+      this.decrypt = new decrypt(this.database);
 
    }
 

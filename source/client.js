@@ -189,8 +189,6 @@ class client {
             
             } catch (error) {console.log('error we had', error); result = false;}
 
-            console.log('result', result); // remove
-
             // >
 
             await this.message({
@@ -217,8 +215,7 @@ class client {
                   false : {
 
                      false : `Failed to ${interaction.commandName}.`,
-                     undefined : `${interaction.commandName} was successful.`
-
+                     undefined : `${action || interaction.commandName} was successful.`
 
                   }[result]
 

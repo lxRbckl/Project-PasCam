@@ -10,8 +10,8 @@ class share {
    constructor(pDatabase) {
 
       this.database = pDatabase;
-      this.encrypt = new encrypt(this.database);
-      this.decrypt = new decrypt(this.database);
+      this.encrypt = new encrypt(pDatabase);
+      this.decrypt = new decrypt(pDatabase);
 
    }
 
@@ -93,6 +93,26 @@ class share {
    }
 
 
+   async isShared({
+
+      pKey,
+      pFilePath,
+      pRecipient
+
+   }) {
+
+      let result = await this.decrypt.core({
+
+         pKey : pKey,
+         pData : await this.database.getFile({pFile : pFilePath})
+
+      });
+
+      return ((result.share).includes(pRecipient));
+
+   }
+
+
    async core({
 
       pTag,
@@ -139,8 +159,9 @@ class share {
 
    }) {
 
-      const[tag, file] = pFilePath.split('/');
-      let isAvailable = await this.database.exists({
+      let isRemove = (pAction == 'remove');
+      const [tag, file] = pFilePath.split('/');
+      let isTaken = await this.database.exists({
          
          pName : file,
          pDir : pRecipient
@@ -153,10 +174,13 @@ class share {
          pFilePath : pFilePath
       
       });
+      let isShared = await this.isShared({
 
-      console.log('recipient', pRecipient); // remove
-      console.log('isOwner', isOwner); // remove
-      console.log('isAvailable', isAvailable); // remove
+         pKey : pKey,
+         pFilePath : pFilePath,
+         pRecipient : pRecipient
+
+      });
 
       return {
 
@@ -164,6 +188,8 @@ class share {
          // else (then shareable) <
          false : () => {return false;},
          true : async () => {
+
+            console.log('share 1'); // remove
 
             // owner changes <
             // recipient changes <
@@ -176,19 +202,20 @@ class share {
                pRecipient : pRecipient
 
             });
-            
+
             await {
 
-               'remove' : await oRemove.run,
-               'add' : await this.encrypt.run
+               'remove' : oRemove,
+               'add' : this.encrypt
 
-            }[pAction]({
+            }[pAction].run({
 
                pTag : tag,
                pShare : [],
+               pUsers : pUsers,
                pContent : false,
-               pFilePath : pFilePath,
-               pKey : pUsers[pRecipient].key
+               pKey : pUsers[pRecipient].key,
+               pFilePath : `${pRecipient}/${file}`
 
             });
 
@@ -198,7 +225,7 @@ class share {
 
          // >
 
-      }[isOwner && isAvailable]();
+      }[(isOwner && !isTaken && !isShared) || (isRemove)]();
 
    }
 

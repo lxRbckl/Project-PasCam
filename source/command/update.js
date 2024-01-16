@@ -1,4 +1,5 @@
 // import <
+const share = require('./share.js');
 const encrypt = require('./encrypt.js');
 const decrypt = require('./decrypt.js');
 
@@ -10,8 +11,9 @@ class update {
    constructor(pDatabase) {
       
       this.database = pDatabase;
-      this.encrypt = new encrypt(this.database);
-      this.decrypt = new decrypt(this.database);
+      this.share = new share(pDatabase);
+      this.encrypt = new encrypt(pDatabase);
+      this.decrypt = new decrypt(pDatabase);
    
    }
 
@@ -53,6 +55,7 @@ class update {
 
       pTag,
       pKey,
+      pUsers,
       pContent,
       pFilePath
 
@@ -64,6 +67,23 @@ class update {
          pData : await this.database.getFile({pFile : pFilePath})
 
       });
+
+      // if (recipient) <
+      if (pTag != result.owner) {
+
+         await this.share.core({
+
+            pRecipient : pTag,
+            pAction : 'remove',
+            pTag : result.owner,
+            pKey : pUsers[result.owner],
+            pFilePath : pFilePath.replace(pTag, result.owner)
+
+         });
+
+      }
+
+      // >
 
       await this.encrypt.run({
 

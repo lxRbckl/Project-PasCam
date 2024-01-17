@@ -189,8 +189,6 @@ class share {
          false : () => {return false;},
          true : async () => {
 
-            console.log('share 1'); // remove
-
             // owner changes <
             // recipient changes <
             await this.core({

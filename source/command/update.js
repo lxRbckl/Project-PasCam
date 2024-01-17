@@ -68,7 +68,7 @@ class update {
 
       });
 
-      // if (recipient) <
+      // if (recipient, then update owner) <
       if (pTag != result.owner) {
 
          await this.share.core({
@@ -76,7 +76,7 @@ class update {
             pRecipient : pTag,
             pAction : 'remove',
             pTag : result.owner,
-            pKey : pUsers[result.owner],
+            pKey : pUsers[result.owner].key,
             pFilePath : pFilePath.replace(pTag, result.owner)
 
          });

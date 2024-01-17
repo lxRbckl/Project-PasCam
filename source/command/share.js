@@ -7,6 +7,9 @@ const decrypt = require('./decrypt.js');
 
 class share {
 
+   // when i share a file to user, that user can delete it
+   //
+
    constructor(pDatabase) {
 
       this.database = pDatabase;
@@ -16,7 +19,7 @@ class share {
    }
 
 
-   context() {
+   context(pMembers) {
 
       return {
 
@@ -62,7 +65,17 @@ class share {
                type : 3,
                required : true,
                name : 'recipient',
-               description : 'description'
+               description : 'description',
+               choices : pMembers.map(m => {
+
+                  return {
+
+                     name : m,
+                     value : m
+
+                  };
+
+               })
 
             }
 
@@ -174,7 +187,7 @@ class share {
          pFilePath : pFilePath
       
       });
-      let isShared = await this.isShared({
+      let isRecipient = await this.isShared({
 
          pKey : pKey,
          pFilePath : pFilePath,
@@ -201,7 +214,7 @@ class share {
 
             });
 
-            await {
+            return await {
 
                'remove' : oRemove,
                'add' : this.encrypt
@@ -223,7 +236,7 @@ class share {
 
          // >
 
-      }[(isOwner && !isTaken && !isShared) || (isRemove)]();
+      }[(isOwner && !isTaken && !isRecipient) || (isRemove)]();
 
    }
 

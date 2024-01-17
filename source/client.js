@@ -138,7 +138,7 @@ class client {
       this.client.on('interactionCreate', async (interaction) => {
 
          var result = undefined;
-         let tag = interaction.user.tag;
+         let tag = (interaction.user.tag);
          let users = await this.database.getMembers();
 
          // if (authentic) <
@@ -187,7 +187,7 @@ class client {
 
                });
             
-            } catch (error) {console.log('error we had', error); result = false;}
+            } catch (error) {result = false;}
 
             // >
 
@@ -239,7 +239,7 @@ class client {
             await this.message({
 
                pKind : 'member',
-               pTitle : (member.user.tag).toLowerCase(),
+               pTitle : member.user.tag,
                pThumbnail : member.user.displayAvatarURL(),
                pChannel : await this.client.channels.cache.get(this.channelId),
                pDescription : [
@@ -262,6 +262,9 @@ class client {
 
    async run() {
 
+      let commands = Object.values(this.commands);
+      let members = await this.database.getDir({});
+
       this.client.login(this.token);
       this.client.rest.put(
  
@@ -271,7 +274,7 @@ class client {
             this.guildId
 
          ),
-         {body : (Object.values(this.commands)).map(i => i.context())}
+         {body : (commands.map(c => c.context(members)))}
 
       );
 

@@ -43,12 +43,12 @@ class remove extends share {
 
    async run({
    
+      pTag,
       pKey,
       pUsers,
       pFilePath
    
    }) {
-
 
       let result = await this.decrypt.core({
 
@@ -57,28 +57,37 @@ class remove extends share {
 
       });
 
-      // delete (involved, recipients?) <
-      // if recipient then update owner <
-      let [tag, file] = pFilePath.split('/');
-      for (const m of [tag, ...result.share]) {
+      // if (owner) <
+      // else (then not allowed) <
+      if (pTag == result.owner) {
 
-         await this.database.delFile({pFile : `${m}/${file}`});
+         // delete (involved recipients?) <
+         // if (recipient, then update owner) <
+         let [tag, file] = pFilePath.split('/');
+         for (const m of [tag, ...result.share]) {
 
-      }
+            await this.database.delFile({pFile : `${m}/${file}`});
 
-      if (result.owner != tag) {
+         }
+
+         if (result.owner != tag) {
+            
+            await this.core({
+
+               pRecipient : tag,
+               pAction : 'remove',
+               pTag : result.owner,
+               pKey : pUsers[result.owner].key,
+               pFilePath : `${result.owner}/${file}`
+
+            });
          
-         await this.core({
+         }
 
-            pRecipient : tag,
-            pAction : 'remove',
-            pTag : result.owner,
-            pKey : pUsers[result.owner].key,
-            pFilePath : `${result.owner}/${file}`
-
-         });
+         // >
       
       }
+      else {return false;}
 
       // >
 

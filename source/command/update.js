@@ -61,9 +61,6 @@ class update extends share {
 
    }) {
 
-      console.log('update run', pTag, pContent, pFilePath);
-      console.log('- - - - - - - - - -');
-
       let result = await this.decrypt.core({
 
          pKey : pKey,
@@ -76,7 +73,6 @@ class update extends share {
 
          await super.core({
 
-            pResult : result,
             pRecipient : pTag,
             pAction : 'remove',
             pTag : result.owner,

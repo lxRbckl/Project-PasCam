@@ -48,9 +48,6 @@ class decrypt extends encrypt {
 
    }) {
 
-      console.log('decrypt core', pKey, pData);
-      console.log('- - - - - - - - - -');
-
       // setup <
       const text = pData.text;
       const key = Buffer.from(pKey);
@@ -87,9 +84,6 @@ class decrypt extends encrypt {
       isShared = false
 
    }) {
-
-      console.log('decrypt run', pTag, pFilePath);
-      console.log('- - - - - - - - - -');
 
       const result = await this.core({
 

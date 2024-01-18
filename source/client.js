@@ -188,7 +188,7 @@ class client {
 
                });
             
-            } catch (error) {console.log(error); result = false;}
+            } catch (error) {result = false;}
 
             // >
 

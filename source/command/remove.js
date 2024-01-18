@@ -41,14 +41,7 @@ class remove extends share {
    }
 
 
-   async core({pFilePath}) {
-
-      console.log('remove core', pFilePath);
-      console.log('- - - - - - - - - -');
-
-      await this.database.delFile({pFile : pFilePath});
-
-   }
+   async core({pFilePath}) {await this.database.delFile({pFile : pFilePath});}
 
 
    async run({
@@ -61,8 +54,6 @@ class remove extends share {
       pRecipient
       
    }) {
-
-      console.log('remove run', pTag, pFile, pFilePath, pRecipient);
       
       let result = await this.decrypt.core({
 
@@ -79,9 +70,6 @@ class remove extends share {
          pFilePath : `${result.owner}/${pFile}`
 
       });
-
-      console.log('remove logic', owner, recipient);
-      console.log('- - - - - - - - - -');
 
       // if (not allowed) <
       // else if (only owner) <

@@ -98,8 +98,6 @@ class share {
       pRecipient
 
    }) {
-
-      console.log('isRecipient', pKey, pFilePath, pRecipient);
       
       let result = await this.decrypt.core({
 
@@ -107,9 +105,6 @@ class share {
          pData : await this.database.getFile({pFile : pFilePath})
 
       });
-
-      console.log('recipient result', result);
-      console.log('- - - - - - - - - - - -');
 
       return (result.share).includes(pRecipient) ? pRecipient : undefined;
 
@@ -125,9 +120,6 @@ class share {
       pRecipient
 
    }) {
-
-      console.log('share core', pTag, pAction, pFilePath, pRecipient);
-      console.log('- - - - - - - - - -');
 
       let result = await this.decrypt.core({
 
@@ -167,8 +159,6 @@ class share {
 
    }) {
 
-      console.log('share run', pTag, pFile, pAction, pFilePath, pRecipient);
-
       let result = await this.decrypt.core({
 
          pKey : pKey,
@@ -176,70 +166,50 @@ class share {
 
       });
 
-      let isRemove = (pAction == 'remove');
-      let owner = this.isOwner({pTag : pTag, pResult : result});
-      let isAvailable = !(await this.database.exists({
-         
-         pName : pFile, 
-         pDir : pRecipient
-      
-      }));
-      let recipient = await this.isRecipient({
+      let isOpen = !([result.owner, ...result.share].includes(pRecipient));
+      let isNew = !(await this.database.exists({pDir : pRecipient, pName : pFile}));
 
-         pRecipient : pRecipient,
-         pKey : pUsers[result.owner].key,
-         pFilePath : `${result.owner}/${pFile}`
-      
-      });
+      // if (owner, open, new) <
+      // else (then not allowed) <
+      if ((result.content) && (isOpen) && (isNew)) {
 
-      console.log('share logic', isRemove, owner, isAvailable, recipient);
-      console.log('- - - - - - - - - - - -');
+         // owner changes <
+         // recipient changes <
+         await this.core({
 
-      return {
+            pTag : pTag,
+            pKey : pKey,
+            pResult : result,
+            pAction : pAction,
+            pFilePath : pFilePath,
+            pRecipient : pRecipient
 
-         // if (not permitted) <
-         // else (then shareable) <
-         false : () => {return false;},
-         true : async () => {
+         });
 
-            // owner changes <
-            // recipient changes <
-            await this.core({
+         return await {
 
-               pTag : pTag,
-               pKey : pKey,
-               pResult : result,
-               pAction : pAction,
-               pFilePath : pFilePath,
-               pRecipient : pRecipient
+            'remove' : oRemove,
+            'add' : this.encrypt
 
-            });
+         }[pAction].run({
 
-            return await {
+            pTag : pTag,
+            pShare : [],
+            pFile : pFile,
+            pUsers : pUsers,
+            pContent : false,
+            pRecipient : pRecipient,
+            pKey : pUsers[pRecipient].key,
+            pFilePath : `${pRecipient}/${pFile}`
 
-               'remove' : oRemove,
-               'add' : this.encrypt
-
-            }[pAction].run({
-
-               pTag : pTag,
-               pShare : [],
-               pFile : pFile,
-               pUsers : pUsers,
-               pContent : false,
-               pRecipient : recipient,
-               pKey : pUsers[pRecipient].key,
-               pFilePath : `${pRecipient}/${pFile}`
-
-            });
-
-            // >
-            
-         }
+         });
 
          // >
 
-      }[(owner && isAvailable && !recipient) || (isRemove)]();
+      }
+      else {return false;}
+
+      // >
 
    }
 

@@ -68,8 +68,8 @@ class update extends share {
 
       });
 
-      // if (recipient, then update owner) <
-      if (pTag != result.owner) {
+      // if (shared) <
+      if (!result.content) {
 
          await super.core({
 

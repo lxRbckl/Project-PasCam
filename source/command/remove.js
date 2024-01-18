@@ -80,17 +80,15 @@ class remove extends share {
 
       });
 
-
       console.log('remove logic', owner, recipient);
       console.log('- - - - - - - - - -');
 
       // if (not allowed) <
       // else if (only owner) <
       // else if (owner and recipient) <
-      if (!owner && !recipient) {console.log('remove here 1'); return false;}
+      if (!owner && !recipient) {return false;}
       else if (owner && !pRecipient) {
 
-         console.log('remove here 2'); // remove
          [pTag, ...result.share].map(async i => await this.core({
 
             pFilePath : `${i}/${pFile}`
@@ -100,7 +98,6 @@ class remove extends share {
       }
       else if ((owner && pRecipient) || (recipient)) {
 
-         console.log('remove here 3');
          // remove recipient file <
          // remove recipient from owner <
          await this.core({pFilePath : `${(pRecipient || recipient)}/${pFile}`});

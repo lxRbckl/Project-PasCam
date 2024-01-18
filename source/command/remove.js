@@ -41,15 +41,29 @@ class remove extends share {
    }
 
 
+   async core({pFilePath}) {
+
+      console.log('remove core', pFilePath);
+      console.log('- - - - - - - - - -');
+
+      await this.database.delFile({pFile : pFilePath});
+
+   }
+
+
    async run({
    
       pTag,
       pKey,
+      pFile,
       pUsers,
-      pFilePath
-   
+      pFilePath,
+      pRecipient
+      
    }) {
 
+      console.log('remove run', pTag, pFile, pFilePath, pRecipient);
+      
       let result = await this.decrypt.core({
 
          pKey : pKey,
@@ -57,37 +71,52 @@ class remove extends share {
 
       });
 
-      // if (owner) <
-      // else (then not allowed) <
-      if (pTag == result.owner) {
+      let owner = super.isOwner({pTag : pTag, pResult : result});
+      let recipient = await super.isRecipient({
 
-         // delete (involved recipients?) <
-         // if (recipient, then update owner) <
-         let [tag, file] = pFilePath.split('/');
-         for (const m of [tag, ...result.share]) {
+         pRecipient : pTag,
+         pKey : pUsers[result.owner].key,
+         pFilePath : `${result.owner}/${pFile}`
 
-            await this.database.delFile({pFile : `${m}/${file}`});
+      });
 
-         }
 
-         if (result.owner != tag) {
-            
-            await this.core({
+      console.log('remove logic', owner, recipient);
+      console.log('- - - - - - - - - -');
 
-               pRecipient : tag,
-               pAction : 'remove',
-               pTag : result.owner,
-               pKey : pUsers[result.owner].key,
-               pFilePath : `${result.owner}/${file}`
+      // if (not allowed) <
+      // else if (only owner) <
+      // else if (owner and recipient) <
+      if (!owner && !recipient) {console.log('remove here 1'); return false;}
+      else if (owner && !pRecipient) {
 
-            });
-         
-         }
+         console.log('remove here 2'); // remove
+         [pTag, ...result.share].map(async i => await this.core({
+
+            pFilePath : `${i}/${pFile}`
+
+         }));
+
+      }
+      else if ((owner && pRecipient) || (recipient)) {
+
+         console.log('remove here 3');
+         // remove recipient file <
+         // remove recipient from owner <
+         await this.core({pFilePath : `${(pRecipient || recipient)}/${pFile}`});
+         await super.core({
+
+            pAction : 'remove',
+            pTag : result.owner,
+            pKey : pUsers[result.owner].key,
+            pRecipient : pRecipient || recipient,
+            pFilePath : `${result.owner}/${pFile}`
+
+         });
 
          // >
-      
+
       }
-      else {return false;}
 
       // >
 

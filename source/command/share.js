@@ -7,9 +7,6 @@ const decrypt = require('./decrypt.js');
 
 class share {
 
-   // when i share a file to user, that user can delete it
-   //
-
    constructor(pDatabase) {
 
       this.database = pDatabase;
@@ -86,27 +83,15 @@ class share {
    }
 
 
-   async isOwner({
+   isOwner({
 
       pTag,
-      pKey,
-      pFilePath
+      pResult
 
-   }) {
-
-      let result = await this.decrypt.core({
-
-         pKey : pKey,
-         pData : await this.database.getFile({pFile : pFilePath})
-
-      });
-
-      return (pTag == result.owner);
-
-   }
+   }) {return (pTag == pResult.owner);}
 
 
-   async isShared({
+   async isRecipient({
 
       pKey,
       pFilePath,
@@ -114,6 +99,8 @@ class share {
 
    }) {
 
+      console.log('isRecipient', pKey, pFilePath, pRecipient);
+      
       let result = await this.decrypt.core({
 
          pKey : pKey,
@@ -121,7 +108,10 @@ class share {
 
       });
 
-      return ((result.share).includes(pRecipient));
+      console.log('recipient result', result);
+      console.log('- - - - - - - - - - - -');
+
+      return (result.share).includes(pRecipient) ? pRecipient : undefined;
 
    }
 
@@ -135,6 +125,9 @@ class share {
       pRecipient
 
    }) {
+
+      console.log('share core', pTag, pAction, pFilePath, pRecipient);
+      console.log('- - - - - - - - - -');
 
       let result = await this.decrypt.core({
 
@@ -163,7 +156,9 @@ class share {
 
    async run({
 
+      pTag,
       pKey,
+      pFile,
       pUsers,
       oRemove,
       pAction,
@@ -172,28 +167,33 @@ class share {
 
    }) {
 
-      let isRemove = (pAction == 'remove');
-      const [tag, file] = pFilePath.split('/');
-      let isTaken = await this.database.exists({
-         
-         pName : file,
-         pDir : pRecipient
-      
-      });
-      let isOwner = await this.isOwner({
-         
-         pTag : tag, 
-         pKey : pKey, 
-         pFilePath : pFilePath
-      
-      });
-      let isRecipient = await this.isShared({
+      console.log('share run', pTag, pFile, pAction, pFilePath, pRecipient);
+
+      let result = await this.decrypt.core({
 
          pKey : pKey,
-         pFilePath : pFilePath,
-         pRecipient : pRecipient
+         pData : await this.database.getFile({pFile : pFilePath})
 
       });
+
+      let isRemove = (pAction == 'remove');
+      let owner = this.isOwner({pTag : pTag, pResult : result});
+      let isAvailable = !(await this.database.exists({
+         
+         pName : pFile, 
+         pDir : pRecipient
+      
+      }));
+      let recipient = await this.isRecipient({
+
+         pRecipient : pRecipient,
+         pKey : pUsers[result.owner].key,
+         pFilePath : `${result.owner}/${pFile}`
+      
+      });
+
+      console.log('share logic', isRemove, owner, isAvailable, recipient);
+      console.log('- - - - - - - - - - - -');
 
       return {
 
@@ -206,8 +206,9 @@ class share {
             // recipient changes <
             await this.core({
 
-               pTag : tag,
+               pTag : pTag,
                pKey : pKey,
+               pResult : result,
                pAction : pAction,
                pFilePath : pFilePath,
                pRecipient : pRecipient
@@ -221,12 +222,14 @@ class share {
 
             }[pAction].run({
 
-               pTag : tag,
+               pTag : pTag,
                pShare : [],
+               pFile : pFile,
                pUsers : pUsers,
                pContent : false,
+               pRecipient : recipient,
                pKey : pUsers[pRecipient].key,
-               pFilePath : `${pRecipient}/${file}`
+               pFilePath : `${pRecipient}/${pFile}`
 
             });
 
@@ -236,7 +239,7 @@ class share {
 
          // >
 
-      }[(isOwner && !isTaken && !isRecipient) || (isRemove)]();
+      }[(owner && isAvailable && !recipient) || (isRemove)]();
 
    }
 

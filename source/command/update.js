@@ -6,12 +6,12 @@ const decrypt = require('./decrypt.js');
 // >
 
 
-class update {
+class update extends share {
 
    constructor(pDatabase) {
       
+      super(pDatabase);
       this.database = pDatabase;
-      this.share = new share(pDatabase);
       this.encrypt = new encrypt(pDatabase);
       this.decrypt = new decrypt(pDatabase);
    
@@ -61,6 +61,9 @@ class update {
 
    }) {
 
+      console.log('update run', pTag, pContent, pFilePath);
+      console.log('- - - - - - - - - -');
+
       let result = await this.decrypt.core({
 
          pKey : pKey,
@@ -71,8 +74,9 @@ class update {
       // if (recipient, then update owner) <
       if (pTag != result.owner) {
 
-         await this.share.core({
+         await super.core({
 
+            pResult : result,
             pRecipient : pTag,
             pAction : 'remove',
             pTag : result.owner,

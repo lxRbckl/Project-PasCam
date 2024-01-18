@@ -137,7 +137,7 @@ class client {
 
       this.client.on('interactionCreate', async (interaction) => {
 
-         var result = undefined;
+         let result = undefined;
          let tag = (interaction.user.tag);
          let users = await this.database.getMembers();
 
@@ -177,17 +177,18 @@ class client {
                }[await this.database.exists({pDir : tag, pName : file})].run({
 
                   pTag : tag,
+                  pFile : file,
                   pUsers : users,
                   pAction : action,
                   pContent : content,
                   pKey : users[tag].key,
                   pRecipient : recipient,
-                  pFilePath : tag + '/' + file,
+                  pFilePath : `${tag}/${file}`,
                   oRemove : this.commands.remove,
 
                });
             
-            } catch (error) {result = false;}
+            } catch (error) {console.log(error); result = false;}
 
             // >
 

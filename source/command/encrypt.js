@@ -67,6 +67,9 @@ class encrypt {
 
    }) {
 
+      console.log('encrypt run', pTag, pContent, pFilePath, pShare);
+      console.log('- - - - - - - - - -');
+
       // setup <
       const key = Buffer.from(pKey);
       const iv = randomBytes(this.ivSize);

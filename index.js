@@ -8,12 +8,12 @@ const client = require('./source/client.js');
 
 
 // setup <
-const maxMembers = 15;
-const dataFilepath = '/data/';
-const guildId = '970204828858990593';
-const channelId = '1129843141101498378';
-const applicationId = '976408750070054943';
-const token = undefined;
+const token = process.env.token;
+const guildId = process.env.guildId;
+const channelId = process.env.channelId;
+const maxMembers = process.env.maxMembers;
+const dataFilePath = process.env.dataFilePath;
+const applicationId = process.env.applicationId;
 
 // >
 
@@ -26,7 +26,7 @@ const token = undefined;
       pGuildId : guildId,
       pChannelId : channelId,
       pMaxMembers : maxMembers,
-      pDataFilepath : dataFilepath,
+      pDataFilePath : dataFilePath,
       pApplicationId : applicationId
 
    }).run();

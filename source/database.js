@@ -11,7 +11,7 @@ class database extends local {
       pClient,
       pChannelId,
       pMaxMembers,
-      pDataFilepath
+      pDataFilePath
 
    }) {
 
@@ -19,7 +19,7 @@ class database extends local {
       this.client = pClient;
       this.channelId = pChannelId;
       this.maxMembers = pMaxMembers;
-      this.referencePath = pDataFilepath;
+      this.referencePath = pDataFilePath;
 
    }
 

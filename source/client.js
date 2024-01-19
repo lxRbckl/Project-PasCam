@@ -27,7 +27,7 @@ class client {
       pGuildId,
       pChannelId,
       pMaxMembers,
-      pDataFilepath,
+      pDataFilePath,
       pApplicationId
 
    }) {
@@ -37,7 +37,7 @@ class client {
       this.guildId = pGuildId;
       this.channelId = pChannelId;
       this.maxMembers = pMaxMembers;
-      this.dataFilepath = pDataFilepath;
+      this.dataFilePath = pDataFilePath;
       this.applicationId = pApplicationId;
 
       this.client = new Client({
@@ -58,7 +58,7 @@ class client {
          pClient : this.client,
          pChannelId : this.channelId,
          pMaxMembers : this.maxMembers,
-         pDataFilepath : this.dataFilepath
+         pDataFilePath : this.dataFilePath
          
       });
 

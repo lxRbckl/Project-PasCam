@@ -1,7 +1,6 @@
 FROM node:18
 
 
-# FUTURE references to kubernetes #
 ENV maxMembers 15
 ENV dataFilePath '/data/'
 ENV guildId '970204828858990593'

@@ -15,6 +15,18 @@ jobs:
       DOCKERPROJECT: "project-pascam"
 
     steps:
+      - name: Evaluate Commit Message
+        run: |
+
+          commitMessage="${{ github.event.head_commit.message }}";
+
+          if [ "$commitMessage" != "Update" ]; then
+
+             echo "Cancelling Workflow.";
+             exit 1;
+
+          fi
+    
       - name: Checkout Repository
         uses: actions/checkout@v2
 

@@ -13,6 +13,7 @@ jobs:
 
     env:
       DOCKERPROJECT: "project-pascam"
+      architecture : "linux/arm64"
 
     steps:
       - name: Evaluate Commit Message

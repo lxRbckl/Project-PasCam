@@ -6,21 +6,12 @@ ENV dataFilePath '/data/'
 ENV guildId '970204828858990593'
 ENV channelId '1129843141101498378'
 ENV applicationId '976408750070054943'
-ENV token undefined
-
-ENV repository 'https://github.com/lxRbckl/Project-PasCam.git'
+ENV discordToken undefined
 
 
-WORKDIR /usr/src/app
-COPY . .
-
-
-RUN apt-get install -y git
-RUN git clone ${repository}
-
-RUN cd Project-PasCam
+WORKDIR /usr/app
+COPY ./ /usr/app
 RUN npm install
-RUN mkdir data
 
 
 CMD ["node", "index.js"]

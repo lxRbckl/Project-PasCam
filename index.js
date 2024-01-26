@@ -8,8 +8,8 @@ const client = require('./source/client.js');
 
 
 // setup <
-const token = process.env.token;
 const guildId = process.env.guildId;
+const token = process.env.discordToken;
 const channelId = process.env.channelId;
 const maxMembers = process.env.maxMembers;
 const dataFilePath = process.env.dataFilePath;

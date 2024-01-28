@@ -11,13 +11,11 @@ ENV applicationId '976408750070054943'
 
 WORKDIR /app
 COPY ./ /app
+RUN npm install
 
 
 RUN mkdir /app/data
 VOLUME ["${dataFilePath}"]
-
-
-RUN npm install
 
 
 CMD ["node", "index.js"]

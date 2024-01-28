@@ -252,7 +252,7 @@ class client {
 
             });
 
-            // await 
+            process.exit(0);
 
          }
 

@@ -252,6 +252,8 @@ class client {
 
             });
 
+            // await 
+
          }
 
          // >
@@ -276,6 +278,17 @@ class client {
 
          ),
          {body : (commands.map(c => c.context(members)))}
+         
+         // {
+
+         //    body : (commands.map(c => {
+            
+         //       try {return c.context(members);}
+         //       catch (error) {undefined}
+               
+         //    }))
+         
+         // }
 
       );
 

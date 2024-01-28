@@ -63,7 +63,7 @@ class share {
                required : true,
                name : 'recipient',
                description : 'description',
-               choices : pMembers.map(m => {
+               choices : (Array.isArray(pMembers) ? pMembers.map(m => {
 
                   return {
 
@@ -72,7 +72,7 @@ class share {
 
                   };
 
-               })
+               }) : [])
 
             }
 

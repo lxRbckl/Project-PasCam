@@ -16,7 +16,7 @@ class database extends local {
    }) {
 
       super();
-      this.show = true;
+      this.show = false;
       this.client = pClient;
       this.channelId = pChannelId;
       this.maxMembers = pMaxMembers;

@@ -2,7 +2,7 @@ FROM node:18.16.0
 
 
 ENV maxMembers 15
-ENV dataFilePath 'data/'
+ENV dataFilePath '/app/data/'
 ENV discordToken undefined
 ENV guildId '970204828858990593'
 ENV channelId '1129843141101498378'

@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "lxrbckl": "^6.2.0"
+    "lxrbckl": "^6.2.1"
   },
   "devDependencies": {
     "mocha": "^10.2.0"

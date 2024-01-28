@@ -254,8 +254,6 @@ class client {
 
             });
 
-            process.exit(0);
-
          }
 
          // >

@@ -33,6 +33,7 @@ class client {
    }) {
 
       // setup <
+      // initialize <
       this.token = pToken;
       this.guildId = pGuildId;
       this.channelId = pChannelId;

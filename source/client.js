@@ -178,11 +178,11 @@ class client {
 
                });
             
-            } catch (error) {result = false;}
+            } catch (error) {console.log('client error', error); result = false;}
 
             // >
 
-            console.log('result', result); // remove
+            console.log('client result', result); // remove
 
 
             await this.message({

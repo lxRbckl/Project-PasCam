@@ -139,10 +139,13 @@ class client {
             let file = interaction.options.get('file')?.value + '.json';
             let recipient = interaction.options.get('recipient')?.value;
 
+            console.log('client args', tag, file, users, action, content, recipient); // remove
+
             // try (if valid input) <
             // except (then invalid input) <
             try {
 
+               console.log('interaction command name', interaction.commandName); // remove
                result = await {
 
                   // false (if new file) <

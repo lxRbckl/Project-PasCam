@@ -135,9 +135,12 @@ class client {
          if (interaction.user.id == users[tag].id) {
 
             let action = interaction.options.get('action')?.value;
+            console.log('action 1', interaction.options.get('action')); // remove
             let content = interaction.options.get('content')?.value;
+            console.log('content', interaction.options.get('content')); // remove
             let file = interaction.options.get('file')?.value + '.json';
             let recipient = interaction.options.get('recipient')?.value;
+            console.log('recipient', recipient); // remove
 
             console.log('client args', tag, file, users, action, content, recipient); // remove
 

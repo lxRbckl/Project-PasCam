@@ -1,12 +1,15 @@
 FROM node:18.16.0
 
 
-ENV maxMembers 15
-ENV guildId '<insert>'
-ENV channelId '<insert>'
-ENV dataFilePath '/data/'
-ENV discordToken undefined
-ENV applicationId '<insert>'
+# referencing docker compose #
+ENV discordToken ${discordToken}
+
+ENV guildId ${guildId}
+ENV channelId ${channelId}
+ENV applicationId ${applicationId}
+
+ENV maxMembers ${maxMembers}
+ENV dataFilePath ${dataFilePath}
 
 
 WORKDIR /app

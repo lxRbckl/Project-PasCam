@@ -9,9 +9,7 @@ class database extends local {
    constructor({
 
       pClient,
-      pChannelId,
-      pMaxMembers,
-      pDataFilePath
+      pChannelId
 
    }) {
 
@@ -19,8 +17,8 @@ class database extends local {
       this.show = false;
       this.client = pClient;
       this.channelId = pChannelId;
-      this.maxMembers = pMaxMembers;
-      this.referencePath = pDataFilePath;
+      this.maxMembers = process.env.maxMembers;
+      this.referencePath = process.env.dataFilePath;
 
    }
 

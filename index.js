@@ -7,31 +7,8 @@ const client = require('./source/client.js');
 // >
 
 
-// setup <
-const guildId = process.env.guildId;
 const token = process.env.discordToken;
-const channelId = process.env.channelId;
-const maxMembers = process.env.maxMembers;
-const dataFilePath = process.env.dataFilePath;
-const applicationId = process.env.applicationId;
-
-// >
-
-
-(async () => {
-
-   new client({
-
-      pToken : token,
-      pGuildId : guildId,
-      pChannelId : channelId,
-      pMaxMembers : maxMembers,
-      pDataFilePath : dataFilePath,
-      pApplicationId : applicationId
-
-   }).run();
-
-})();
+(async () => {new client(token).run();})();
 
 
 // export <

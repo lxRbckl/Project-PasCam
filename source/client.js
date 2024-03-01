@@ -21,25 +21,14 @@ const encrypt = require('./command/encrypt.js');
 
 class client {
 
-   constructor({
-
-      pToken,
-      pGuildId,
-      pChannelId,
-      pMaxMembers,
-      pDataFilePath,
-      pApplicationId
-
-   }) {
+   constructor(pToken) {
 
       // setup <
       // initialize <
       this.token = pToken;
-      this.guildId = pGuildId;
-      this.channelId = pChannelId;
-      this.maxMembers = pMaxMembers;
-      this.dataFilePath = pDataFilePath;
-      this.applicationId = pApplicationId;
+      this.guildId = process.env.guildId;
+      this.channelId = process.env.channelId;
+      this.applicationId = process.env.applicationId;
 
       this.client = new Client({
 
@@ -57,9 +46,7 @@ class client {
       this.database = new database({
 
          pClient : this.client,
-         pChannelId : this.channelId,
-         pMaxMembers : this.maxMembers,
-         pDataFilePath : this.dataFilePath
+         pChannelId : this.channelId
          
       });
 

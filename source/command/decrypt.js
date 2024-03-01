@@ -85,8 +85,6 @@ class decrypt extends encrypt {
 
    }) {
 
-      console.log('decrypt', pTag, pKey, pUsers, pFilePath); // remove
-
       const result = await this.core({
 
          pKey : pKey,
@@ -94,13 +92,10 @@ class decrypt extends encrypt {
 
       });
 
-      console.log('decrypt result', result); // remove
-
       // if (original) <
       // else (then shared) <
       if (pTag == result.owner) {
 
-         console.log('decrypt original');
          return {
 
             content : '> ' + (result.content).replace(/ /g, '\n> '),
@@ -120,7 +115,6 @@ class decrypt extends encrypt {
       }
       else {
 
-         console.log('decrypt duplicate');
          return await this.run({
 
             isShared : true,

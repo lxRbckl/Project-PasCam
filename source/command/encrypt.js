@@ -66,6 +66,8 @@ class encrypt {
       pShare = []
 
    }) {
+
+      console.log('encrypt', pTag, pKey, pContent, pFilePath); // remove
       
       // setup <
       const key = Buffer.from(pKey);
@@ -80,6 +82,8 @@ class encrypt {
       );
 
       // >
+
+      
 
       await this.database.setFile({
 

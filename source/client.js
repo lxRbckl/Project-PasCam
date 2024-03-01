@@ -82,6 +82,8 @@ class client {
 
    }) {
       
+      console.log('message', pKind, pTitle, pDescription)
+
       return {
 
          'member' : async () => {
@@ -179,6 +181,9 @@ class client {
             } catch (error) {result = false;}
 
             // >
+
+            console.log('result', result); // remove
+
 
             await this.message({
 

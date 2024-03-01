@@ -8,7 +8,13 @@ const client = require('./source/client.js');
 
 
 const token = process.env.discordToken;
-(async () => {new client(token).run();})();
+(async () => {
+
+   console.log('type', typeof token);
+   console.log('token', token);
+   new client(token).run();
+
+})();
 
 
 // export <

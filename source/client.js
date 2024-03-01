@@ -129,8 +129,6 @@ class client {
          let tag = (interaction.user.tag);
          let users = await this.database.getMembers();
 
-         console.log('users', users); // remove
-
          // if (authentic) <
          if (interaction.user.id == users[tag].id) {
 

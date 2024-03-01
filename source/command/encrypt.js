@@ -66,8 +66,6 @@ class encrypt {
       pShare = []
 
    }) {
-
-      console.log(pFilePath); // remove
       
       // setup <
       const key = Buffer.from(pKey);
